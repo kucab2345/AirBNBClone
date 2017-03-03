@@ -1,5 +1,8 @@
 package phase2;
 
+import java.sql.ResultSet;
+import java.sql.Statement;
+
 public class CreateUser 
 {
 	private String userLogin;
@@ -43,8 +46,21 @@ public class CreateUser
 		gender = gend;
 	}
 	
-	public void AddUserToDatabase()
+	public void AddUserToDatabase(Statement stmt) 
 	{
-		
+		sqlStatement = "INSERT INTO users VALUES(\"" + userLogin + "\",\"" + userName + "\"," + userType + ",\""
+				+ gender + "\"," + userAge + ",\"" + description + "\",\"" + userPassword + "\");";
+
+		int result;
+		System.out.println("Executing " + sqlStatement);
+		try 
+		{
+			result = stmt.executeUpdate(sqlStatement);
+			stmt.close();
+		} catch (Exception e) 
+		{
+			System.err.println(e.getMessage() + e.getStackTrace());
+			System.out.println("Cannot execute the query.");
+		}
 	}
 }
