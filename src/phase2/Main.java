@@ -55,7 +55,7 @@ public class Main {
 	            		 
 	            	 if (count == 1)
 	            	 {
-	            		 System.out.println("Enter your user name login:");
+	            		 System.out.println("Enter your user name login:" );
 	            		 while ((login = input.readLine()) == null && login.length() == 0);
 	            		 System.out.println("Enter your password:");
 	            		 while ((password = input.readLine()) == null && password.length() == 0);
