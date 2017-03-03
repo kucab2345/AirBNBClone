@@ -64,21 +64,70 @@ public class Main {
 	            	 }
 	            	 else if (count == 2)
 	            	 {	 
-	            		 System.out.println("Create your login and password here:");
-	            		 while ((sql = input.readLine()) == null && sql.length() == 0)
-	            			 System.out.println(sql);
-	            		 ResultSet rs = connection.stmt.executeQuery(sql);
-	            		 ResultSetMetaData rsmd = rs.getMetaData();
-	            		 int numCols = rsmd.getColumnCount();
-	            		 while (rs.next())
+	            		 String name = "";
+	            		 String age ="";
+	            		 String description = null;
+	            		 String gender = null;
+	            		 String userType = "";
+	            		 boolean type = false;
+	            		 
+	            		 CreateUser user;
+	            		 System.out.print("Enter your username:");
+	            		 login = input.readLine();
+	            		 System.out.print("Enter your password:");
+	            		 password = input.readLine();
+	            		 System.out.print("Enter your name:");
+	            		 name = input.readLine();
+	            		 System.out.print("Enter your age:");
+	            		 age = input.readLine();
+	            		 
+	            		 System.out.print("Enter a desciption about yourself (press ENTER to skip):");
+	            		 description = input.readLine();
+	            		 System.out.print("Enter your gender (M/F/O) (press ENTER to skip):");
+	            		 gender = input.readLine();
+	            		 System.out.print("Enter your type of account (Type 0 for renter, 1 for owner, press ENTER to skip):");
+	            		 userType = input.readLine();
+	            		 
+	            		 if(userType == "1")
 	            		 {
-
-	            			 for (int i=1; i<=numCols;i++)
-	            				 System.out.print(rs.getString(i)+"  ");
-	            			 System.out.println("");
+	            			 type = true;
 	            		 }
-	            		 System.out.println(" ");
-	            		 rs.close();
+	            		 
+	            		 if(login == "" || password == "" || name == "" || age == "")
+	            		 {
+	            			 System.out.println("You must complete all fields.");
+	            		 }
+	            		 else
+	            		 {
+	            			 user = new CreateUser(login,name,Integer.parseInt(age),password);
+	            			 
+	            			 //TODO
+	            			 //Setting as nulls does not seem to actually set the fields in the table to NULL. Look into this. Scrub
+	            			 if(description == "")
+	            			 {
+	            				 description = null;
+	            			 }
+	            			 if(gender == "")
+	            			 {
+	            				 gender = null;
+	            			 }
+	            			 
+	            			 user.SetAllOptional(description,type,gender);
+	            			 user.AddUserToDatabase(connection.stmt);
+	            			 //ResultSet rs = connection.stmt.executeQuery(sql);
+		            		 //ResultSetMetaData rsmd = rs.getMetaData();
+		            		 //int numCols = rsmd.getColumnCount();
+		            		 /*while (rs.next())
+		            		 {
+
+		            			 for (int i=1; i<=numCols;i++)
+		            				 System.out.print(rs.getString(i)+"  ");
+		            			 System.out.println("");
+		            		 }*/
+		            		 System.out.println("User Created");
+		            		 //rs.close();
+	            		 }
+	            		 
 	            	 }
 	            	 else
 	            	 {   
