@@ -43,7 +43,7 @@ public class CreateUser
 		gender = gend;
 	}
 	
-	public void AddToDatabase()
+	public void AddUserToDatabase()
 	{
 		
 	}
