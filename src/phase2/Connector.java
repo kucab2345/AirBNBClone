@@ -7,9 +7,9 @@ public class Connector {
 	public Statement stmt;
 	public Connector() throws Exception {
 		try{
-		 	String userName = "5530user";
-	   		String password = "5530@16";
-	        	String url = "jdbc:mysql://georgia.eng.utah.edu/cs5530db";
+		 	String userName = "5530u47";
+	   		String password = "jnfojrk2";
+	        	String url = "jdbc:mysql://georgia.eng.utah.edu/5530db47";
 		        Class.forName ("com.mysql.jdbc.Driver").newInstance ();
         		con = DriverManager.getConnection (url, userName, password);
 
@@ -17,7 +17,9 @@ public class Connector {
         	//stmt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			stmt = con.createStatement();
 			//stmt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        } catch(Exception e) {
+        } 
+		catch(Exception e)
+		{
 			System.err.println("Unable to open mysql jdbc connection. The error is as follows,\n");
             		System.err.println(e.getMessage());
 			throw(e);
