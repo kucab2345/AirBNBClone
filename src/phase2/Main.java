@@ -5,8 +5,14 @@ import java.io.*;
 //import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Main {
+	
+	private static String login = "";
+	private static String password = "";
 	
 	public static void displayMenu()
 	{
@@ -17,6 +23,7 @@ public class Main {
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
 	}
+	
 	public static void displayLoggedInMenu()
 	{
 		 System.out.println("Action Center");
@@ -29,10 +36,11 @@ public class Main {
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
 	}
+	
 	public static void CreateUserChoice(BufferedReader input, Connector connection) throws IOException
 	{
-		 String login = "";
-		 String password = "";
+		 //String login = "";
+		 //String password = "";
 		 String name = "";
 		 String age ="";
 		 String description = null;
@@ -83,13 +91,15 @@ public class Main {
 			 
 			 user.SetAllOptional(description,type,gender);
 			 user.AddUserToDatabase(connection.stmt);
+			 login = "";
+			password = "";
 		 }
 		 
 	}
+	
 	public static boolean LoginChoice(BufferedReader input, Connector connection)throws IOException
 	{
-		String login;
-		String password;
+		
 		
 		Login loginObj = new Login();
 		 System.out.println("Enter your user name login:");
@@ -104,135 +114,164 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		boolean loginState = false;
-		
+		boolean wantsToQuit = false;
 		Connector connection = null;
 		String choice;
-        String login;
-        String password;
-        int count = 0;
-        
-        
-         try
-		 {
-			//remember to replace the password
-        	 	 connection = new Connector();
-	             System.out.println ("Database connection established");
-	         
-	             BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-	             
-	             while(!loginState)
-	             {
-	            	 displayMenu();
-	            	 while ((choice = input.readLine()) == null && choice.length() == 0);
-	            	 try
-	            	 {
-	            		 count = Integer.parseInt(choice);
-	            	 }
-	            	 catch (Exception e)
-	            	 {
-	            		 System.err.println("Error parsing option to int.");
-	            		 continue;
-	            	 }
-	            	 if (count < 1 | count > 3)
-	            	 {
-	            		 System.out.println("Your option " + count + " was not a valid number.");
-	            		 continue;
-	            	 }
-	            		 
-	            	 if (count == 1)
-	            	 {
-	            		 try
-	            		 {
-	            			 loginState = LoginChoice(input,connection); 
-	            		 }
-	            		 catch(Exception e){
-	            			 System.err.println(e.getMessage() + "\n" + e.getStackTrace());
-	            		 }
-	            	 }
-	            	 else if (count == 2)
-	            	 {	 
-	            		 try
-	            		 {
-	            			 CreateUserChoice(input,connection); 
-	            		 }
-	            		 catch(Exception e){
-	            			 System.err.println(e.getMessage() + "\n" + e.getStackTrace());
-	            		 }
-	            	 }
-	            	 else
-	            	 {   
-	            		 System.out.println("EoM");
-	            		 connection.stmt.close();
-	            		 break;
-	            	 }
-	             }
-	             while(loginState)
-	             {
-	            	 displayLoggedInMenu();
-	            	 while ((choice = input.readLine()) == null && choice.length() == 0);
-	            	 try
-	            	 {
-	            		 count = Integer.parseInt(choice);
-	            	 }
-	            	 catch (Exception e)
-	            	 {
-	            		 System.err.println("Error parsing option to int.");
-	            		 continue;
-	            	 }
-	            	 if (count < 1 | count > 6)
-	            	 {
-	            		 System.out.println("Your option " + count + " was not a valid number.");
-	            		 continue;
-	            	 }
-	            	 if(count == 1)
-	            	 {
-	            		 
-	            	 }
-	            	 else if(count == 2)
-	            	 {
-	            		 
-	            	 }
-	            	 else if(count == 3)
-	            	 {
-	            		 
-	            	 }
-	            	 else if(count == 4)
-	            	 {
-	            		 
-	            	 }
-	            	 else if(count == 5)
-	            	 {
-	            		 
-	            	 }
-	            	 else if(count == 6)
-	            	 {
-	            		//TODO: Make this return to the previous menu somehow. Don't be bad
-	            		 loginState = false;
-	            	 }
-	             }
-		 }
-         catch (Exception e)
-         {
-        	 e.printStackTrace();
-        	 System.err.println ("Either connection error or query execution error! " + e.getMessage());
-         }
-         finally
-         {
-        	 if (connection != null)
-        	 {
-        		 try
-        		 {
-        			 connection.closeConnection();
-        			 System.out.println ("Database connection terminated");
-        		 }
-        	 
-        		 catch (Exception e) 
-        		 { 
-        			 e.printStackTrace();
-        			 System.err.println("There was some error closing: " + e.getMessage());
-        		 }
-        	 }	 
-         }
+
+		int count = 0;
+		try 
+		{
+			do 
+			{
+				// remember to replace the password
+				connection = new Connector();
+				System.out.println("Database connection established");
+
+				BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+				while (!loginState) 
+				{
+					displayMenu();
+					while ((choice = input.readLine()) == null && choice.length() == 0);
+					try
+					{
+						count = Integer.parseInt(choice);
+					} 
+					catch (Exception e)
+					{
+						System.err.println("Error parsing option to int.");
+						continue;
+					}
+					if (count < 1 | count > 3)
+					{
+						System.out.println("Your option " + count + " was not a valid number.");
+						continue;
+					}
+
+					if (count == 1) 
+					{
+						try 
+						{
+							loginState = LoginChoice(input, connection);
+						} 
+						catch (Exception e) 
+						{
+							System.err.println(e.getMessage() + "\n" + e.getStackTrace());
+						}
+					} 
+					else if (count == 2) 
+					{
+						try 
+						{
+							CreateUserChoice(input, connection);
+						}
+						catch (Exception e) 
+						{
+							System.err.println(e.getMessage() + "\n" + e.getStackTrace());
+						}
+					} 
+					else
+					{
+						System.out.println("End of program, thank you for staying!");
+						connection.stmt.close();
+						loginState = false;
+						wantsToQuit = true;
+						break;
+					}
+				}
+				while (loginState) 
+				{
+					displayLoggedInMenu();
+					while ((choice = input.readLine()) == null && choice.length() == 0);
+					try 
+					{
+						count = Integer.parseInt(choice);
+					} 
+					catch (Exception e) 
+					{
+						System.err.println("Error parsing option to int.");
+						continue;
+					}
+					if (count < 1 | count > 6)
+					{
+						System.out.println("Your option " + count + " was not a valid number.");
+						continue;
+					}
+					if (count == 1) 
+					{
+						Reserve reservation = new Reserve(login, password);
+						reservation.DisplayTempHousesAvailable(connection.stmt);
+						List<Integer> housesID = new ArrayList<Integer>();
+						List<Integer> periodsID = new ArrayList<Integer>();
+						System.out.println("Type which temporary housing ID you would like to reserve:");
+						String answer = "no";
+						String requested;
+						do
+						{
+							requested = input.readLine();
+							housesID.add(Integer.parseInt(requested));
+							System.out.println("Here are the available dates: ");
+							reservation.DisplayAvailableDays(Integer.parseInt(requested), connection.stmt);
+							System.out.println("Input the period ID related to which dates you want:");
+							requested = input.readLine();
+							periodsID.add(Integer.parseInt(requested));
+							System.out.println("Would you like to reserve another? (yes/no)");
+							answer = input.readLine();
+							answer = answer.toLowerCase();
+						}while(answer == "y" || answer == "yes");
+						
+						for(int i = 0; i < housesID.size(); i++)
+						{
+							reservation.AddReservation(housesID.get(i), periodsID.get(i), connection.stmt);
+						}
+					} 
+					else if (count == 2)
+					{
+
+					}
+					else if (count == 3)
+					{
+
+					} 
+					else if (count == 4)
+					{
+
+					}
+					else if (count == 5)
+					{
+
+					} 
+					else if (count == 6) 
+					{
+						// TODO: Make this return to the previous menu somehow.
+						// Don't be bad
+						loginState = false;
+					}
+				}
+			} while (!wantsToQuit);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+			System.err.println("Either connection error or query execution error! " + e.getMessage());
+		} 
+		finally 
+		{
+			if (connection != null) 
+			{
+				try 
+				{
+					connection.closeConnection();
+					System.out.println("Database connection terminated");
+				}
+
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					System.err.println("There was some error closing: " + e.getMessage());
+				}
+			}
+		}
 	}
 
 }
