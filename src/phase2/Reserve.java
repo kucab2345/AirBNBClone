@@ -73,7 +73,7 @@ public class Reserve
 		catch (Exception e) 
 		{
 			System.err.println(e.getMessage() + e.getStackTrace());
-			System.out.println("Cannot execute the query where the date is selected.");
+			System.out.println("Cannot execute the query is selected.");
 		}
 
 		float totalCost = pricePerNight * difference;

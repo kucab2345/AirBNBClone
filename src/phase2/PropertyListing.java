@@ -25,8 +25,8 @@ public class PropertyListing
 	
 	public boolean AddListing(Statement stmt)
 	{
-		sqlStatement = "INSERT INTO users VALUES(DEFAULT,\"" + category + "\"," + description + ",\""
-				+ squareFootage + "\"," + carLimit + ",\"" + neighbors + "\",\"" + login + "\");";
+		sqlStatement = "INSERT INTO temphousing VALUES(DEFAULT,\"" + category + "\",\"" + description + "\","
+				+ squareFootage + "," + carLimit + "," + neighbors + ",\"" + login + "\");";
 		int rowsAffected = 0;
 		try
 		{
