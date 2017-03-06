@@ -5,9 +5,7 @@ import java.io.*;
 //import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Main {
 	
@@ -200,7 +198,7 @@ public class Main {
 					if (count == 1) 
 					{
 						Reserve reservation = new Reserve(login, password);
-						reservation.DisplayTempHousesAvailable(connection.stmt);
+						HashSet<String> housesAvail = reservation.DisplayTempHousesAvailable(connection.stmt);
 						List<Integer> housesID = new ArrayList<Integer>();
 						List<Integer> periodsID = new ArrayList<Integer>();
 						System.out.println("Type which temporary housing ID you would like to reserve:");
@@ -208,17 +206,41 @@ public class Main {
 						String requested;
 						do
 						{
-							requested = input.readLine();
-							housesID.add(Integer.parseInt(requested));
+							if(answer.equals("yes") || answer.equals("y"))
+							{
+								System.out.println("Type which temporary housing ID you would like to reserve:");
+							}
+							do
+							{
+								System.out.println("Enter a valid temporary housing ID number:");
+								while((requested = input.readLine()) == null && requested.length() == 0);
+							
+								
+							}while(!housesAvail.contains(requested));
+							
+							
 							System.out.println("Here are the available dates: ");
-							reservation.DisplayAvailableDays(Integer.parseInt(requested), connection.stmt);
-							System.out.println("Input the period ID related to which dates you want:");
-							requested = input.readLine();
-							periodsID.add(Integer.parseInt(requested));
-							System.out.println("Would you like to reserve another? (yes/no)");
-							answer = input.readLine();
+							int numAvail = reservation.DisplayAvailableDays(Integer.parseInt(requested), connection.stmt);
+							if(numAvail > 0)
+							{
+								housesID.add(Integer.parseInt(requested));
+								System.out.println("Input the period ID related to which dates you want:");
+								requested = input.readLine();
+								periodsID.add(Integer.parseInt(requested));
+								System.out.println("Would you like to reserve another? (yes/no)");
+								answer = input.readLine();
+								
+							}
+							else
+							{
+								
+								System.out.println("Ooops! There are no available dates for that house!");
+								System.out.println("Would you like to try another house? (yes/no)");
+								answer = input.readLine();
+							}
 							answer = answer.toLowerCase();
-						}while(answer == "y" || answer == "yes");
+							
+						} while(answer.equals("yes") || answer.equals("y"));
 						
 						for(int i = 0; i < housesID.size(); i++)
 						{

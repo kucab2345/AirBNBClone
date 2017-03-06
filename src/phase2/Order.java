@@ -5,7 +5,8 @@ import java.sql.*;
 //import javax.servlet.http.*;
 
 public class Order{
-	public Order() {
+	public Order() 
+	{
 	}
 	public String getOrders(String attrName, String attrValue, Statement stmt) throws Exception{
 		String query;
