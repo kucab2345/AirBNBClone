@@ -194,7 +194,7 @@ public class Main {
 						System.err.println("Error parsing option to int.");
 						continue;
 					}
-					if (count < 1 | count > 6)
+					if (count < 1 | count > 7)
 					{
 						System.out.println("Your option " + count + " was not a valid number.");
 						continue;
@@ -363,11 +363,16 @@ public class Main {
 					else if (count == 3)
 					{
 						Reserve reservation = new Reserve(login, password);
-						HashSet<String> housesAvail = reservation.DisplayTempHousesAvailable(connection.stmt);
+						HashSet<String> housesAvail = reservation.DisplayTempHousesAvailable(login, connection.stmt, false);
+						String requested;
+						do
+						{
+							System.out.println("Enter a valid temporary housing ID number:");
+							while((requested = input.readLine()) == null && requested.length() == 0);
+						}while(!housesAvail.contains(requested));
 						//Adding dates of availability
 						String continueWithDates = "yes";
 						String fromDate, toDate;
-						Map<Date,Date> dateMap = new Hashtable<Date,Date>();
 						while(continueWithDates.equals("yes") || continueWithDates.equals("y"))
 						{
 							String pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$";
@@ -416,7 +421,7 @@ public class Main {
 							while((costPerNight = input.readLine()) == null && costPerNight.length() == 0);
 							float costPerNightf = Float.parseFloat(costPerNight);
 							Available available = new Available();
-							if(!available.AddAvailable(costPerNightf,connection.stmt))
+							if(!available.AddAvailable(costPerNightf,connection.stmt, Integer.parseInt(requested)))
 							{
 								System.out.println("Failure to add availablilties!");
 							}
@@ -432,7 +437,27 @@ public class Main {
 					} 
 					else if (count == 4)
 					{
-
+						System.out.println("Which reservation are you checking into at this time?");
+						System.out.println("Here are the reservations you have at this time.");
+						Reserve reservations = new Reserve(login,password);
+						String requested;
+						String thidAndPeriodID;
+						HashSet<String> validReserves = reservations.DisplayAllReservationsForUser(login, connection.stmt);
+						do
+						{
+							System.out.print("Enter the temporary house ID matching the reservation you wish to record your stay at this time: ");
+							while((requested = input.readLine()) == null && requested.length() == 0); //TODO need to do error checking
+							thidAndPeriodID = requested;
+							System.out.print("And the period ID: ");
+							while((requested = input.readLine()) == null && requested.length() == 0);//need to do error checking here as well
+							thidAndPeriodID += " " + requested;
+						}while(!validReserves.contains(thidAndPeriodID));
+						
+						Stays newStay = new Stays(thidAndPeriodID);
+						newStay.AddStay(login, 10, connection.stmt); //TODO WRONG RIGHT NOW, PAYMENT ALL OF RESERVE COST
+						
+						
+						
 					}
 					else if (count == 5)
 					{

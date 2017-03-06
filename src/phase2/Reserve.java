@@ -4,8 +4,7 @@ import java.sql.ResultSet;
 
 import java.sql.Statement;
 import java.util.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 
 public class Reserve
 {
@@ -42,9 +41,6 @@ public class Reserve
 					pricePerNight = Float.parseFloat(result.getString(i));
 				}
 			}
-			
-			
-			//statement.close();
 		}
 		catch (Exception e) 
 		{
@@ -53,27 +49,25 @@ public class Reserve
 		}
 		
 		sqlStatement = "SELECT fromDate, toDate FROM period WHERE periodID = " + periodID + ";";
-		 result = null;
 		 ResultSet result2 = null;
 		 int difference = -1;
 		try 
 		{
 			result = statement.executeQuery(sqlStatement);
-
+			Statement statement2 = statement.getConnection().createStatement();
 			while(result.next())
 			{
-				result2 = statement.executeQuery("SELECT DATEDIFF( \"" + result.getString(2) + "\", \"" + result.getString(1) + "\");");
+				result2 = statement2.executeQuery("SELECT DATEDIFF( \"" + result.getString(2) + "\", \"" + result.getString(1) + "\");");
 				while(result2.next())
 				{
 					difference = Integer.parseInt(result2.getString(1));
 				}
 			}
-			//statement.close();
 		}
 		catch (Exception e) 
 		{
-			System.err.println(e.getMessage() + e.getStackTrace());
-			System.out.println("Cannot execute the query is selected.");
+			System.err.println(e.getMessage() + "\n" + e.getStackTrace());
+			System.out.println("Cannot execute the query is selected date.");
 		}
 
 		float totalCost = pricePerNight * difference;
@@ -86,6 +80,7 @@ public class Reserve
 		{
 			resultNum = statement.executeUpdate(sqlStatement);
 			System.out.println("Successfully inserted this reservation.");
+			System.out.println("Your total cost will be: $" + totalCost);
 			//statement.close();
 		} 
 		catch (Exception e) 
@@ -110,8 +105,23 @@ public class Reserve
 	
 	public HashSet<String> DisplayTempHousesAvailable(Statement statement)
 	{
-		sqlStatement = "SELECT t.thid, t.category, t.description, t.squareFootage, t.carLimit, t.neighbors "
-				+ "FROM temphousing t";
+		return DisplayTempHousesAvailable("", statement, true);
+
+	}
+	
+	public HashSet<String> DisplayTempHousesAvailable(String login, Statement statement, boolean all)
+	{
+		if(all)
+		{
+			sqlStatement = "SELECT t.thid, t.category, t.description, t.squareFootage, t.carLimit, t.neighbors "
+					+ "FROM temphousing t;";
+		}
+		else
+		{
+			sqlStatement = "SELECT t.thid, t.category, t.description, t.squareFootage, t.carLimit, t.neighbors "
+					+ "FROM temphousing t WHERE t.login = \"" + login + "\";";
+		}
+		
 		System.out.println("Retreiving housing information...");
 		ResultSet output = null;
 		HashSet<String> thids = new HashSet<String>();
@@ -174,5 +184,46 @@ public class Reserve
 			System.out.println("Cannot execute the query.");
 			return 0;
 		}
+	}
+	
+	public HashSet<String> DisplayAllReservationsForUser(String login, Statement statement)
+	{
+		ResultSet result = null;
+		HashSet<String> valid = new HashSet();
+		sqlStatement = "SELECT r.thid, r.periodID, r.cost FROM reserve r WHERE r.login = \"" + login + "\";";
+		try
+		{
+			result = statement.executeQuery(sqlStatement);
+			System.out.println("===============================================================================================");
+
+			while(result.next())
+			{
+				String valueToAdd = "";
+				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
+				{
+					if(i == 1)
+					{
+						valueToAdd = result.getString(i);
+					}
+					else if(i == 2)
+					{
+						valueToAdd += " " + result.getString(i);
+					}
+					System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+				}
+				valid.add(valueToAdd);
+				System.out.println("===============================================================================================");
+
+			}
+			return valid;
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Cannot execute the query to display reservations available.");
+			return valid;
+		}
+
+		
 	}
 }
