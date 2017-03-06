@@ -226,4 +226,87 @@ public class Reserve
 
 		
 	}
+	
+	public float SelectCostOfReserve(int thid, String login, Statement statement)
+	{
+		float cost = -1;
+		ResultSet result = null;
+		sqlStatement = "SELECT r.cost FROM reserve r WHERE r.thid = " + thid + " AND r.login = \"" + login + "\";";
+		try
+		{
+			result = statement.executeQuery(sqlStatement);
+			while(result.next())
+			{
+				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
+				{
+					cost = Float.parseFloat(result.getString(i));
+				}
+			}
+			return cost;
+
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Cannot execute the query to obtain cost of requested thid.");
+			return cost;
+		}
+		
+	}
+	
+	public int SelectPeriodIDOfReserve(int thid, String login, Statement statement)
+	{
+		int periodid = -1;
+		ResultSet result = null;
+		sqlStatement = "SELECT r.periodID FROM reserve r WHERE r.thid = " + thid + " AND r.login = \"" + login + "\";";
+		try
+		{
+			result = statement.executeQuery(sqlStatement);
+			while(result.next())
+			{
+				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
+				{
+					periodid = Integer.parseInt(result.getString(i));
+				}
+			}
+			return periodid;
+
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Cannot execute the query to obtain periodid of requested thid.");
+			return periodid;
+		}
+		
+	}
+	
+	public boolean RemoveReservation(String login, int thid, int periodID, Statement statement)
+	{
+		sqlStatement = "DELETE FROM reserve WHERE login = \"" + login + "\" AND thid = " + thid + " AND periodID = " + periodID + ";";
+		
+		int rowsAffected = 0;
+		try
+		{
+			rowsAffected = statement.executeUpdate(sqlStatement);
+			if(rowsAffected > 0)
+			{
+				return true;
+
+			}
+			else
+			{
+				System.err.println("Did not remove entry desired from reserve table.");
+
+				return false;
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Cannot execute the query to update visits.");
+			return false;
+		}
+		
+	}
 }

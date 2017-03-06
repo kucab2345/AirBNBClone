@@ -5,6 +5,7 @@ import java.io.*;
 //import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -442,19 +443,45 @@ public class Main {
 						Reserve reservations = new Reserve(login,password);
 						String requested;
 						String thidAndPeriodID;
+						int thid;
+						float cost;
+						int periodID;
 						HashSet<String> validReserves = reservations.DisplayAllReservationsForUser(login, connection.stmt);
+						boolean wantsToStay = true;
 						do
 						{
 							System.out.print("Enter the temporary house ID matching the reservation you wish to record your stay at this time: ");
 							while((requested = input.readLine()) == null && requested.length() == 0); //TODO need to do error checking
 							thidAndPeriodID = requested;
+							thid = Integer.parseInt(requested);
+							cost = reservations.SelectCostOfReserve(thid, login, connection.stmt);
+							periodID = reservations.SelectPeriodIDOfReserve(thid, login, connection.stmt);
 							System.out.print("And the period ID: ");
 							while((requested = input.readLine()) == null && requested.length() == 0);//need to do error checking here as well
 							thidAndPeriodID += " " + requested;
+							DecimalFormat decimalFormat = new DecimalFormat("0.00");
+					        String costAsString = decimalFormat.format(cost);
+							System.out.print("Please retype the amount shown without the dollar sign ($" + costAsString + "), the cost associated with the temporary housing, to confirm the price: ");
+							while((requested = input.readLine()) == null && requested.length() == 0);//need to do error checking here as well
+							if(Float.parseFloat(requested) != cost)
+							{
+								wantsToStay = false;
+								break;
+							}
 						}while(!validReserves.contains(thidAndPeriodID));
 						
-						Stays newStay = new Stays(thidAndPeriodID);
-						newStay.AddStay(login, 10, connection.stmt); //TODO WRONG RIGHT NOW, PAYMENT ALL OF RESERVE COST
+						if(wantsToStay)
+						{
+							reservations.RemoveReservation(login, thid, periodID, connection.stmt);
+							System.out.println("Thanks for staying with Uotel AirBNB!");
+							Stays newStay = new Stays(thidAndPeriodID);
+							newStay.AddStay(login, cost, connection.stmt); //TODO WRONG RIGHT NOW, PAYMENT ALL OF RESERVE COST
+						}
+						else
+						{
+							System.out.println("Cancelling check in.");
+						}
+						
 						
 						
 						
