@@ -249,7 +249,42 @@ public class Main {
 					} 
 					else if (count == 2)
 					{
+						String housingCategory;
+						String housingDescription;
+						String housingSquareFootage;
+						String housingCarLimit;
+						String housingNeighbors;
+						boolean housingNeighborsBool = false;
+						
+						System.out.print("Type in the housing category (ie, Apartment, Condo, House, etc");
+						while((housingCategory = input.readLine()) == null && housingCategory.length() == 0);
+						
+						System.out.print("Enter a description of the housing (press ENTER to skip)");
+						while((housingDescription = input.readLine()) == null && housingDescription.length() == 0);
+						
+						System.out.print("Enter the square footage of the housing (press ENTER to skip)");
+						while((housingSquareFootage = input.readLine()) == null && housingSquareFootage.length() == 0);
 
+						System.out.print("Enter the car parking limit of the housing (press ENTER to skip)");
+						while((housingCarLimit = input.readLine()) == null && housingCarLimit.length() == 0);
+						
+						System.out.print("Enter whether or not there are neighbors((y)es or (n)o). (press ENTER to skip)");
+						while((housingNeighbors = input.readLine()) == null && housingNeighbors.length() == 0);
+						housingNeighbors = housingNeighbors.toLowerCase();
+						
+						if(housingNeighbors.equals("yes") || housingNeighbors.equals("y"))
+						{
+							housingNeighborsBool = true;
+						}
+						
+						int housingCarLimitInt = Integer.parseInt(housingCarLimit);
+						double housingSquareFootageDouble = Double.parseDouble(housingSquareFootage);
+						
+						PropertyListing listing = new PropertyListing(login,housingCategory,housingDescription,
+								housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool);
+						
+						listing.AddListing(connection.stmt);
+						
 					}
 					else if (count == 3)
 					{
