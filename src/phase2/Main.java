@@ -486,9 +486,59 @@ public class Main {
 						
 						
 					}
-					else if (count == 5)
+					else if (count == 5)//All types of feedback
 					{
-
+						int feedbackCount = 0;
+						String feedbackChoice;
+						System.out.println("What you like to leave feedback on?");
+						System.out.println("1. Mark favorite temp housings:");
+						System.out.println("2. Rate temp housings:");
+						System.out.println("3. Rate another user's feedback on temp housings:");
+						System.out.print("Enter your choice here:");
+						while ((feedbackChoice = input.readLine()) == null && feedbackChoice.length() == 0);
+						try
+						{
+							feedbackCount = Integer.parseInt(feedbackChoice);
+						} 
+						catch (Exception e)
+						{
+							System.err.println("Error parsing option to int.");
+							continue;
+						}
+						if (feedbackCount < 1 | feedbackCount > 4)
+						{
+							System.out.println("Your option " + feedbackChoice + " was not a valid number.");
+							continue;
+						}
+						if(feedbackCount == 1)//Mark a th as favorite
+						{
+							String favTHID = "";
+							String favPeriodID = "";
+							FavoriteTH favTH = new FavoriteTH();
+							
+							if(!favTH.showAllVisitedTH(login,connection.stmt))
+							{
+								System.out.println("Error displaying displaying your visits.");
+							}
+							
+							System.out.print("Enter THID of temp housing you would like to favorite:");
+							while ((favTHID = input.readLine()) == null && favTHID.length() == 0);
+							
+							if(!favTH.MarkFavoriteTH(favTHID, login, connection.stmt))
+							{
+								System.out.println("Error marking " + favTHID + " as a favorite");
+							}
+							
+						}
+						else if(feedbackCount == 2)//rate temp housing
+						{
+							
+						}
+						else if(feedbackCount == 3)//rate another user's feedback
+						{
+							
+						}
+						
 					} 
 					else if(count == 6)
 					{
