@@ -494,7 +494,7 @@ public class Main {
 						System.out.println("1. Mark favorite temp housings:");
 						System.out.println("2. Rate temp housings:");
 						System.out.println("3. Rate another user's feedback on temp housings:");
-						System.out.print("Enter your choice here:");
+						System.out.print("Enter your choice here: ");
 						while ((feedbackChoice = input.readLine()) == null && feedbackChoice.length() == 0);
 						try
 						{
@@ -562,7 +562,7 @@ public class Main {
 								feedbackKeyWords = input.readLine();
 							}
 							//Get star rating
-							System.out.print("Please enter a rating for THID " + feedbackTHID + ". (1-10, 1 being lowest and 10 being highest. ENTER to skip):");
+							System.out.print("Please enter a rating for THID " + feedbackTHID + ". (1-10, 1 being lowest and 10 being highest):");
 							starRatingString = input.readLine();
 							int starRating = 0;//Does this need to really be initialized to pass the while loop?
 							do
@@ -573,13 +573,13 @@ public class Main {
 									if(starRating < 1 || starRating > 10)
 									{
 										System.out.print("The number you entered is out of range. Please try again: ");
-										starRatingString = input.readLine();
+										while ((starRatingString = input.readLine()) == null && starRatingString.length() == 0);
 									}
 								}
 								catch(Exception e)
 								{
 									System.out.print("The number you entered is invalid. Please try again: ");
-									starRatingString = input.readLine();
+									while ((starRatingString = input.readLine()) == null && starRatingString.length() == 0);
 								}
 							}while(starRating < 1 || starRating > 10);
 							
@@ -591,7 +591,80 @@ public class Main {
 						}
 						else if(feedbackCount == 3)//rate another user's feedback
 						{
+							RateUserFeedback rate = new RateUserFeedback();
+							HashSet<Integer>theThids = rate.DisplayTempHouseTHIDS(connection.stmt);
+							System.out.println("Above are the temporary houses IDs.  Select the one on which you would like to see user feedbacks.");
+							System.out.println("Type in the ID number only associated with the house:");
+							String desiredThid = "";
+							int theThid = -1;
+							do
+							{
+								if(theThid < 0)
+								{
+									while ((desiredThid = input.readLine()) == null && desiredThid.length() == 0);
+									theThid = Integer.parseInt(desiredThid);
+
+								}
+								else
+								{
+									System.out.println("The desired ID either doesn't exist or your input is invalid.");
+									while ((desiredThid = input.readLine()) == null && desiredThid.length() == 0);
+									theThid = Integer.parseInt(desiredThid);
+
+								}
+								
+							}while(!theThids.contains(theThid));
+										
+							HashSet<Integer> feedbackIDs = rate.GetAllUsersFeedback(login, theThid, connection.stmt);
+							System.out.println("Here are the feedbacks associated with the THID: " + theThid);
 							
+							System.out.println("Which feedback do you wish to rate?");
+							System.out.print("Type in only the feedback ID you wish to rate: ");
+							String desiredFeedbackID = "";
+							int feedbackID = -1;
+							do
+							{
+								if(feedbackID < 0)
+								{
+									while ((desiredFeedbackID = input.readLine()) == null && desiredFeedbackID.length() == 0);
+									feedbackID = Integer.parseInt(desiredFeedbackID);
+
+								}
+								else
+								{
+									System.out.println("The desired ID either doesn't exist or your input is invalid.");
+									while ((desiredFeedbackID = input.readLine()) == null && desiredFeedbackID.length() == 0);
+									feedbackID = Integer.parseInt(desiredFeedbackID);
+
+								}
+							}while(!feedbackIDs.contains(feedbackID));
+							String desiredRating ="";
+							int rating = -1;
+							System.out.print("Now give the rating you want, can be 0-2, where 0 is the worst, and 2 is the best: ");
+							do
+							{
+								if(rating < 0)
+								{
+									while ((desiredRating = input.readLine()) == null && desiredRating.length() == 0);
+									rating = Integer.parseInt(desiredRating);
+
+								}
+								else
+								{
+									System.out.println("Your input was invalid, please enter a number from 0-2.");
+									while ((desiredRating = input.readLine()) == null && desiredRating.length() == 0);
+									rating = Integer.parseInt(desiredRating);
+
+								}
+							}while(rating < 0 || rating > 2);
+							if(rate.RateFeedback(login, rating, feedbackID, connection.stmt))
+							{
+								System.out.println("You have successfully rated feedback ID " + feedbackID + " on housing ID " + theThid + ".");
+							}
+							else
+							{
+								System.out.println("Failed to rate feedback.");
+							}
 						}
 						
 					} 

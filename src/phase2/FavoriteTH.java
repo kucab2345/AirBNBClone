@@ -56,6 +56,7 @@ public class FavoriteTH
 		}
 		catch(Exception e)
 		{
+			System.err.println(e.getMessage() + "\n" + e.getStackTrace());
 			return false;
 		}		
 	}
