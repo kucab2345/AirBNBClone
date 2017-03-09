@@ -1,11 +1,13 @@
 package phase2;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashSet;
 
 public class FavoriteTH 
 {
 	private String sqlStatement;
 	private ResultSet result = null;
+	private HashSet<String> thids = new HashSet<String>();
 	
 	public boolean showAllVisitedTH(String login, Statement stmt)
 	{
@@ -19,7 +21,7 @@ public class FavoriteTH
 				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
 				{
 					System.out.print(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
-					
+					thids.add(result.getString(i));
 				}
 				System.out.println();
 			}
@@ -41,8 +43,16 @@ public class FavoriteTH
 		int rowsAffected = 0;
 		try
 		{
-			rowsAffected = stmt.executeUpdate(sqlStatement);
-			return true;
+			if(thids.contains(thid))
+			{
+				rowsAffected = stmt.executeUpdate(sqlStatement);
+				return true;
+			}
+			else
+			{
+				System.out.println("The thid you entered is not a thid you have visited");
+				return false;
+			}
 		}
 		catch(Exception e)
 		{
