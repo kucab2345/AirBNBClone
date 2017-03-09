@@ -532,6 +532,61 @@ public class Main {
 						}
 						else if(feedbackCount == 2)//rate temp housing
 						{
+							FeedbackTH feedbackTH = new FeedbackTH();
+							String feedbackTHID = "";
+							String feedbackText = "";
+							String feedbackKeyWords = "";
+							String starRatingString = "";
+							
+							if(!feedbackTH.showAllVisitedTH(login, connection.stmt))
+							{
+								System.out.println("Error displaying displaying your visits.");
+							}
+							//Get THID for feedback
+							System.out.print("Enter THID of temp housing you would like to provide feedback for:");
+							while ((feedbackTHID = input.readLine()) == null && feedbackTHID.length() == 0);
+							//Get feedback text
+							System.out.print("Please type any feedback you may have for THID " + feedbackTHID + ". (<=100 characters, ENTER to skip):");
+							feedbackText = input.readLine();
+							while(feedbackText.length() > 100)
+							{
+								System.out.print("Too long! Please try again!");
+								feedbackText = input.readLine();
+							}
+							//Get feedback keywords
+							System.out.print("Please type any keywords you may have for THID " + feedbackTHID + ". (<=50 characters, ENTER to skip):");
+							feedbackKeyWords = input.readLine();
+							while(feedbackKeyWords.length() > 50)
+							{
+								System.out.print("Too long! Please try again!");
+								feedbackKeyWords = input.readLine();
+							}
+							//Get star rating
+							System.out.print("Please enter a rating for THID " + feedbackTHID + ". (1-10, 1 being lowest and 10 being highest. ENTER to skip):");
+							starRatingString = input.readLine();
+							int starRating = 0;//Does this need to really be initialized to pass the while loop?
+							do
+							{
+								try
+								{
+									starRating = Integer.parseInt(starRatingString);
+									if(starRating < 1 || starRating > 10)
+									{
+										System.out.print("The number you entered is out of range. Please try again: ");
+										starRatingString = input.readLine();
+									}
+								}
+								catch(Exception e)
+								{
+									System.out.print("The number you entered is invalid. Please try again: ");
+									starRatingString = input.readLine();
+								}
+							}while(starRating < 1 || starRating > 10);
+							
+							if(!feedbackTH.MarkTHFeedback(feedbackText, feedbackTHID, login, feedbackKeyWords, starRating, connection.stmt))
+							{
+								System.out.println("Error marking " + feedbackTHID + "'s feedback.");
+							}
 							
 						}
 						else if(feedbackCount == 3)//rate another user's feedback
