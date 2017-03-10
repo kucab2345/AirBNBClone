@@ -10,10 +10,12 @@ public class PropertyListing
 	private double squareFootage;
 	private int carLimit;
 	private boolean neighbors;
+	private String city;
+	private String state;
 	private String login;
 	private String sqlStatement;
 	
-	PropertyListing(String inLogin, String inCategory, String inDescription, double inSquareFootage, int inCarLimit, boolean inNeighbors)
+	PropertyListing(String inLogin, String inCategory, String inDescription, double inSquareFootage, int inCarLimit, boolean inNeighbors, String inCity, String inState)
 	{
 		category = inCategory;
 		description = inDescription;//optional
@@ -21,12 +23,14 @@ public class PropertyListing
 		carLimit = inCarLimit;//optional
 		neighbors = inNeighbors;//optional
 		login = inLogin;
+		city = inCity;
+		state = inState;
 	}
 	
 	public boolean AddListing(Statement stmt)
 	{
 		sqlStatement = "INSERT INTO temphousing VALUES(DEFAULT,\"" + category + "\",\"" + description + "\","
-				+ squareFootage + "," + carLimit + "," + neighbors + ",\"" + login + "\");";
+				+ squareFootage + "," + carLimit + "," + neighbors + ",\"" + login + "\",\"" + city + "\",\"" + state + "\");";
 		int rowsAffected = 0;
 		try
 		{

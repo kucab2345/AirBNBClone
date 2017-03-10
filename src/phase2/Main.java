@@ -33,7 +33,7 @@ public class Main {
     	 System.out.println("2. Make Property Listing");
     	 System.out.println("3. Add More Availability Dates to Owned Property");
     	 System.out.println("4. Record a Stay");
-    	 System.out.println("5. Leave Feedback");
+    	 System.out.println("5. Leave Feedback, Feedback Ratings, and User Trust Rating");
     	 System.out.println("6. Browse Property");
     	 System.out.println("7. Exit");
 		 System.out.println("To pick your option type in the number associated with that option.");
@@ -134,6 +134,8 @@ public class Main {
 
 				while (!loginState) 
 				{
+					System.out.println("********************************************************************************************************************");
+
 					displayMenu();
 					while ((choice = input.readLine()) == null && choice.length() == 0);
 					try
@@ -184,6 +186,7 @@ public class Main {
 				}
 				while (loginState) 
 				{
+					System.out.println("********************************************************************************************************************");
 					displayLoggedInMenu();
 					while ((choice = input.readLine()) == null && choice.length() == 0);
 					try 
@@ -259,21 +262,23 @@ public class Main {
 						String housingSquareFootage = "0";
 						String housingCarLimit = "";
 						String housingNeighbors = "";
+						String housingCity;
+						String housingState;
 						boolean housingNeighborsBool = false;
 						
-						System.out.print("Type in the housing category (ie, Apartment, Condo, House, etc):");
+						System.out.print("Type in the housing category (ie, Apartment, Condo, House, etc): ");
 						while((housingCategory = input.readLine()) == null && housingCategory.length() == 0);
 						
-						System.out.print("Enter a description of the housing (press ENTER to skip):");
+						System.out.print("Enter a description of the housing (press ENTER to skip): ");
 						while((housingDescription = input.readLine()) == null && housingDescription.length() == 0);
 						
-						System.out.print("Enter the square footage of the housing (press ENTER to skip):");
+						System.out.print("Enter the square footage of the housing (press ENTER to skip): ");
 						while((housingSquareFootage = input.readLine()) == null && housingSquareFootage.length() == 0);
 
-						System.out.print("Enter the car parking limit of the housing (press ENTER to skip):");
+						System.out.print("Enter the car parking limit of the housing (press ENTER to skip): ");
 						while((housingCarLimit = input.readLine()) == null && housingCarLimit.length() == 0);
 						
-						System.out.print("Enter whether or not there are neighbors((y)es or (n)o). (press ENTER to skip):");
+						System.out.print("Enter whether or not there are neighbors((y)es or (n)o). (press ENTER to skip): ");
 						while((housingNeighbors = input.readLine()) == null && housingNeighbors.length() == 0);
 						housingNeighbors = housingNeighbors.toLowerCase();
 						
@@ -282,11 +287,17 @@ public class Main {
 							housingNeighborsBool = true;
 						}
 						
+						System.out.print("Enter what city the house is in (30 character max): ");
+						while((housingCity = input.readLine()) == null && housingCity.length() == 0);
+						
+						System.out.print("Enter what state the house is in (30 character max): ");
+						while((housingState = input.readLine()) == null && housingState.length() == 0);
+						
 						int housingCarLimitInt = Integer.parseInt(housingCarLimit);
 						double housingSquareFootageDouble = Double.parseDouble(housingSquareFootage);
 						
 						PropertyListing listing = new PropertyListing(login,housingCategory,housingDescription,
-								housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool);
+								housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool, housingCity, housingState);
 						
 						if(!listing.AddListing(connection.stmt))
 						{
@@ -490,10 +501,13 @@ public class Main {
 					{
 						int feedbackCount = 0;
 						String feedbackChoice;
+						System.out.println("********************************************************************************************************************");
+
 						System.out.println("What you like to leave feedback on?");
 						System.out.println("1. Mark favorite temp housings:");
 						System.out.println("2. Rate temp housings:");
 						System.out.println("3. Rate another user's feedback on temp housings:");
+						System.out.println("4. Mark another user as trusted: ");
 						System.out.print("Enter your choice here: ");
 						while ((feedbackChoice = input.readLine()) == null && feedbackChoice.length() == 0);
 						try
@@ -666,11 +680,147 @@ public class Main {
 								System.out.println("Failed to rate feedback.");
 							}
 						}
+						else if(feedbackCount == 4)
+						{
+							Trusted trustObj = new Trusted(login);
+							HashSet<String> allUsers = trustObj.DisplayAllUserLogins(connection.stmt);
+							System.out.println("Select which user you would like to mark as trusted or not trusted.");
+							System.out.print("Type in the user login you wish to mark as trusted or not: ");
+							String desiredInput;
+							String desiredLogin = "";
+							int trusted = -1;
+							do
+							{
+								if(desiredLogin.equals(""))
+								{
+									while ((desiredLogin = input.readLine()) == null && desiredLogin.length() == 0);
+								}
+								else
+								{
+									System.out.println("Your input was invalid.  Please only enter the login, one that is listed above, exactly as shown.");
+									while ((desiredLogin = input.readLine()) == null && desiredLogin.length() == 0);
+
+								}
+							} while(!allUsers.contains(desiredLogin));
+							
+							System.out.print("Now enter whether or not the user is trusted.  Trusted is 1, not trusted is 0: ");
+							boolean first = true;
+							do
+							{
+								if(first)
+								{
+									first = false;
+									while ((desiredInput = input.readLine()) == null || desiredInput.length() == 0);
+									try
+									{
+										trusted = Integer.parseInt(desiredInput);
+									}
+									catch(Exception e)
+									{
+										System.out.println("Type only integers, as any other input is invalid.");
+										trusted = -1;
+									}
+
+								}
+								else
+								{
+									System.out.println("Your input was invalid.  Please only enter 1 or 0.");
+									while ((desiredInput = input.readLine()) == null && desiredInput.length() == 0);
+									try
+									{
+										trusted = Integer.parseInt(desiredInput);
+									}
+									catch(Exception e)
+									{
+										System.out.println("Type only integers, as any other input is invalid.");
+										trusted = -1;
+									}
+
+								}
+							} while(trusted < 0 || trusted > 1);
+							
+							System.out.println("Attempting to set as trusted or not...");
+							if(trustObj.MarkUserAsTrusted(desiredLogin, trusted, connection.stmt))
+							{
+								System.out.println("Successfully added your trust rating value of " + trusted + " to the user by the login of " + desiredLogin + ".");
+							}
+							else
+							{
+								System.out.println("Failed to add trusted rating to user of " + desiredLogin + " to the system.");
+							}
+						}
 						
 					} 
 					else if(count == 6)
 					{
+						THBrowsing browse = new THBrowsing(login);
+						System.out.println("********************************************************************************************************************");
+						System.out.println("How would you like to browse the temporary housing?");
+						System.out.println("1. Search For Price: ");
+						System.out.println("2. Search For City: ");
+						System.out.println("3. Search For State: ");
+						System.out.println("4. Search For Keywords: ");
+						System.out.println("5. Search For Category: ");
+						System.out.println("6. Search For A Mix of Two or More of These: ");
+						System.out.print("Enter the number associated with your choice: ");
+						String browseChoice;
+						int browseChoiceNum;
+						boolean first = true;
+						do
+						{
+							if(first)
+							{
+								first = false;
+								while ((browseChoice = input.readLine()) == null && browseChoice.length() == 0);
+							}
+							else
+							{
+								System.out.println("Your previous input was invalid, enter only an integer");
+								while ((browseChoice = input.readLine()) == null && browseChoice.length() == 0);
+							}
+							browseChoiceNum = Integer.parseInt(browseChoice);
+							
+						}while(browseChoiceNum < 0 || browseChoiceNum > 6);
 						
+						if(browseChoiceNum >= 1 || browseChoiceNum <= 5)
+						{
+							System.out.println("********************************************************************************************************************");
+							System.out.println("How would you like to sort the information?");
+							System.out.println("1. Sort By Price: ");
+							System.out.println("2. Sort By Average Feedback Score: ");
+							System.out.println("3. Sort By Average Feedback Score of Trusted Users: ");
+							
+						}
+						else if(browseChoiceNum == 6)
+						{
+							String browsePrice;
+							String browseCity;
+							String browseState;
+							String browseKeywords;
+							String browseCategory;
+							System.out.println("Pick which items you'd like to search for: ");
+							System.out.print("Do you want to include price in search? (Press enter to skip, type yes to add to search): ");
+							browsePrice = input.readLine();
+							browsePrice = browsePrice.toLowerCase();
+							System.out.print("Do you want to include city in search? (Press enter to skip, type yes to add to search): ");
+							browseCity = input.readLine();
+							browseCity = browseCity.toLowerCase();
+							System.out.print("Do you want to include state in search? (Press enter to skip, type yes to add to search): ");
+							browseState = input.readLine();
+							browseState = browseState.toLowerCase();
+							System.out.print("Do you want to include keywords in search? (Press enter to skip, type yes to add to search): ");
+							browseKeywords = input.readLine();
+							browseKeywords = browseKeywords.toLowerCase();
+							System.out.print("Do you want to include category in search? (Press enter to skip, type yes to add to search): ");
+							browseCategory = input.readLine();
+							browseCategory = browseCategory.toLowerCase();
+							
+							System.out.println("********************************************************************************************************************");
+							System.out.println("How would you like to sort the information?");
+							System.out.println("1. Sort By Price: ");
+							System.out.println("2. Sort By Average Feedback Score: ");
+							System.out.println("3. Sort By Average Feedback Score of Trusted Users: ");
+						}
 					}
 					else if (count == 7) 
 					{

@@ -113,12 +113,12 @@ public class Reserve
 	{
 		if(all)
 		{
-			sqlStatement = "SELECT t.thid, t.category, t.description, t.squareFootage, t.carLimit, t.neighbors "
+			sqlStatement = "SELECT t.thid, t.category, t.description, t.squareFootage, t.carLimit, t.neighbors, t.city, t.state "
 					+ "FROM temphousing t;";
 		}
 		else
 		{
-			sqlStatement = "SELECT t.thid, t.category, t.description, t.squareFootage, t.carLimit, t.neighbors "
+			sqlStatement = "SELECT t.thid, t.category, t.description, t.squareFootage, t.carLimit, t.neighbors, t.city, t.state "
 					+ "FROM temphousing t WHERE t.login = \"" + login + "\";";
 		}
 		
