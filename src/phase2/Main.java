@@ -765,6 +765,13 @@ public class Main {
 						System.out.print("Enter the number associated with your choice: ");
 						String browseChoice;
 						int browseChoiceNum;
+						String browsePrice = ", a.pricePerNight"; //NOT RIGHT, NEED TO FIND PRICE FROM AVAILABLE TABLE
+						String browseCity = ", t.city";
+						String browseState = ", t.state";
+						String browseKeywords = ", w.words";  //ALSO NOT RIGHT, NEEDS TO COME FROM DIFFERENT TABLE
+						String browseCategory = ", t.category";
+						String orderOption;
+						int orderOptionNum;
 						boolean first = true;
 						do
 						{
@@ -780,10 +787,48 @@ public class Main {
 							}
 							browseChoiceNum = Integer.parseInt(browseChoice);
 							
-						}while(browseChoiceNum < 0 || browseChoiceNum > 6);
+						}while(browseChoiceNum < 1 || browseChoiceNum > 6);
 						
 						if(browseChoiceNum >= 1 || browseChoiceNum <= 5)
 						{
+							switch(browseChoiceNum)
+							{
+							case 1:
+								browsePrice = ", a.pricePerNight"; //NOT RIGHT, NEED TO FIND PRICE FROM AVAILABLE TABLE
+								browseCity = "";
+								browseState = "";
+								browseKeywords = "";  //ALSO NOT RIGHT, NEEDS TO COME FROM DIFFERENT TABLE
+								browseCategory = "";
+								break;
+							case 2:
+								browsePrice = ""; //NOT RIGHT, NEED TO FIND PRICE FROM AVAILABLE TABLE
+								browseCity = ", t.city";
+								browseState = "";
+								browseKeywords = "";  //ALSO NOT RIGHT, NEEDS TO COME FROM DIFFERENT TABLE
+								browseCategory = "";
+								break;
+							case 3:
+								browsePrice = ""; //NOT RIGHT, NEED TO FIND PRICE FROM AVAILABLE TABLE
+								browseCity = "";
+								browseState = ", t.state";
+								browseKeywords = "";  //ALSO NOT RIGHT, NEEDS TO COME FROM DIFFERENT TABLE
+								browseCategory = "";
+								break;
+							case 4:
+								browsePrice = ""; //NOT RIGHT, NEED TO FIND PRICE FROM AVAILABLE TABLE
+								browseCity = "";
+								browseState = "";
+								browseKeywords = ", w.words";  //ALSO NOT RIGHT, NEEDS TO COME FROM DIFFERENT TABLE
+								browseCategory = "";
+								break;
+							case 5:
+								browsePrice = ""; //NOT RIGHT, NEED TO FIND PRICE FROM AVAILABLE TABLE
+								browseCity = "";
+								browseState = "";
+								browseKeywords = "";  //ALSO NOT RIGHT, NEEDS TO COME FROM DIFFERENT TABLE
+								browseCategory = ", t.category";
+								break;
+							}
 							System.out.println("********************************************************************************************************************");
 							System.out.println("How would you like to sort the information?");
 							System.out.println("1. Sort By Price: ");
@@ -793,27 +838,63 @@ public class Main {
 						}
 						else if(browseChoiceNum == 6)
 						{
-							String browsePrice;
-							String browseCity;
-							String browseState;
-							String browseKeywords;
-							String browseCategory;
+							
 							System.out.println("Pick which items you'd like to search for: ");
 							System.out.print("Do you want to include price in search? (Press enter to skip, type yes to add to search): ");
 							browsePrice = input.readLine();
 							browsePrice = browsePrice.toLowerCase();
+							if(browsePrice.equals("y") || browsePrice.equals("yee") || browsePrice.equals("yes"))
+							{
+								browsePrice = ", a.pricePerNight";
+							}
+							else
+							{
+								browsePrice = "";
+							}
 							System.out.print("Do you want to include city in search? (Press enter to skip, type yes to add to search): ");
 							browseCity = input.readLine();
 							browseCity = browseCity.toLowerCase();
+							if(browseCity.equals("y") || browseCity.equals("yee") || browseCity.equals("yes"))
+							{
+								browseCity = ", t.city";
+							}
+							else
+							{
+								browseCity = "";
+							}
 							System.out.print("Do you want to include state in search? (Press enter to skip, type yes to add to search): ");
 							browseState = input.readLine();
 							browseState = browseState.toLowerCase();
+							if(browseState.equals("y") || browseState.equals("yee") || browseState.equals("yes"))
+							{
+								browseState = ", t.state";
+							}
+							else
+							{
+								browseState = "";
+							}
 							System.out.print("Do you want to include keywords in search? (Press enter to skip, type yes to add to search): ");
 							browseKeywords = input.readLine();
 							browseKeywords = browseKeywords.toLowerCase();
+							if(browseKeywords.equals("y") || browseKeywords.equals("yee") || browseKeywords.equals("yes"))
+							{
+								browseKeywords = ", k.words";
+							}
+							else
+							{
+								browseKeywords = "";
+							}
 							System.out.print("Do you want to include category in search? (Press enter to skip, type yes to add to search): ");
 							browseCategory = input.readLine();
 							browseCategory = browseCategory.toLowerCase();
+							if(browseCategory.equals("y") || browseCategory.equals("yee") || browseCategory.equals("yes"))
+							{
+								browseCategory = ", t.category";
+							}
+							else
+							{
+								browseCategory = "";
+							}
 							
 							System.out.println("********************************************************************************************************************");
 							System.out.println("How would you like to sort the information?");
@@ -821,6 +902,38 @@ public class Main {
 							System.out.println("2. Sort By Average Feedback Score: ");
 							System.out.println("3. Sort By Average Feedback Score of Trusted Users: ");
 						}
+						
+						first = true;
+						do
+						{
+							if(first)
+							{
+								first = false;
+								while ((orderOption = input.readLine()) == null && orderOption.length() == 0);
+							}
+							else
+							{
+								System.out.println("Your previous input was invalid, enter only an integer");
+								while ((orderOption = input.readLine()) == null && orderOption.length() == 0);
+							}
+							orderOptionNum = Integer.parseInt(orderOption);
+							
+						}while(orderOptionNum < 1 || orderOptionNum > 3);
+						
+						switch(orderOptionNum)
+						{
+						case 1:
+							orderOption = "a.pricePerNight";
+							break;
+						case 2:
+							orderOption = ""; //average score of feedback
+							break;
+						case 3:
+							orderOption = ""; //average score of trusted user feedback
+							break;
+						}
+						
+						browse.RequestHousingInformation(browsePrice, browseCity, browseState, browseKeywords, browseCategory, orderOption, connection.stmt);
 					}
 					else if (count == 7) 
 					{
