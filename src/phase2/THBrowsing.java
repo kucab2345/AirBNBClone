@@ -18,7 +18,27 @@ public class THBrowsing
 	public HashSet<String> RequestHousingInformation(String price, String city, String state, String keywords, String category, String orderOption, Statement statement)
 	{
 		output = new HashSet<String>();
-		sqlStatement = "SELECT t.thid," + price + city + state + keywords + category + " FROM temphousing t ORDER BY " + orderOption + ";";
+		sqlStatement = "SELECT t.thid" + price + city + state + keywords + category + " FROM temphousing t";
+		if(!price.equals("") && !keywords.equals(""))
+		{
+			sqlStatement += ", available a, keywords w WHERE a.thid = t.thid AND w.wordsID = ANY(SELECT wordsID FROM haskeywords WHERE thid = t.thid)";
+		}
+		else if(!price.equals(""))
+		{
+			sqlStatement += ", available a WHERE a.thid = t.thid";
+		}
+		else if(!keywords.equals(""))
+		{
+			sqlStatement += ", keywords w WHERE w.wordsID = ANY(SELECT wordsID FROM haskeywords WHERE thid = t.thid)";
+		}
+		sqlStatement += " ORDER BY " + orderOption;
+		if(orderOption.equals("a.pricePerNight"))
+		{
+			sqlStatement += " DESC";
+		}
+		sqlStatement += ";";
+		
+		
 		ResultSet result = null;
 		try
 		{

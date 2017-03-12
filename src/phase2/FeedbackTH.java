@@ -22,7 +22,7 @@ public class FeedbackTH
 			{
 				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
 				{
-					System.out.print(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+					System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 					thids.add(result.getString(i));
 				}
 				System.out.println();

@@ -503,7 +503,7 @@ public class Main {
 						String feedbackChoice;
 						System.out.println("********************************************************************************************************************");
 
-						System.out.println("What you like to leave feedback on?");
+						System.out.println("What would you like to leave feedback on?");
 						System.out.println("1. Mark favorite temp housings:");
 						System.out.println("2. Rate temp housings:");
 						System.out.println("3. Rate another user's feedback on temp housings:");
@@ -789,7 +789,7 @@ public class Main {
 							
 						}while(browseChoiceNum < 1 || browseChoiceNum > 6);
 						
-						if(browseChoiceNum >= 1 || browseChoiceNum <= 5)
+						if(browseChoiceNum >= 1 && browseChoiceNum <= 5)
 						{
 							switch(browseChoiceNum)
 							{
@@ -878,7 +878,7 @@ public class Main {
 							browseKeywords = browseKeywords.toLowerCase();
 							if(browseKeywords.equals("y") || browseKeywords.equals("yee") || browseKeywords.equals("yes"))
 							{
-								browseKeywords = ", k.words";
+								browseKeywords = ", w.words";
 							}
 							else
 							{
@@ -926,10 +926,10 @@ public class Main {
 							orderOption = "a.pricePerNight";
 							break;
 						case 2:
-							orderOption = ""; //average score of feedback
+							orderOption = "(SELECT AVG(starRating) FROM feedback WHERE thid = t.thid)"; //average score of feedback
 							break;
 						case 3:
-							orderOption = ""; //average score of trusted user feedback
+							orderOption = "(SELECT AVG(starRating) FROM feedback WHERE thid = t.thid AND login = ANY(SELECT loginTrusted FROM trusted WHERE isTrusted = TRUE))"; //average score of trusted user feedback
 							break;
 						}
 						
