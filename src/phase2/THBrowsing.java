@@ -32,7 +32,7 @@ public class THBrowsing
 			sqlStatement += ", keywords w WHERE w.wordsID = ANY(SELECT wordsID FROM haskeywords WHERE thid = t.thid)";
 		}
 		sqlStatement += " ORDER BY " + orderOption;
-		if(orderOption.equals("a.pricePerNight"))
+		if(!orderOption.equals("a.pricePerNight"))
 		{
 			sqlStatement += " DESC";
 		}

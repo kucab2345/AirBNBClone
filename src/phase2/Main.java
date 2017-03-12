@@ -259,6 +259,8 @@ public class Main {
 					{
 						String housingCategory;
 						String housingDescription = "";
+						String housingKeywords = "";
+						String housingLanguage = "";
 						String housingSquareFootage = "0";
 						String housingCarLimit = "";
 						String housingNeighbors = "";
@@ -271,6 +273,26 @@ public class Main {
 						
 						System.out.print("Enter a description of the housing (press ENTER to skip): ");
 						while((housingDescription = input.readLine()) == null && housingDescription.length() == 0);
+						
+						System.out.print("Enter keywords associated with this housing of 50 characters or less (press ENTER to skip): ");
+						do
+						{
+							housingKeywords = input.readLine();
+							if(housingKeywords.length() > 50)
+							{
+								System.out.println("Keywords have to be 50 characters or less.");
+							}
+						}while(housingKeywords.length() > 50);
+						
+						System.out.print("Enter the language the keywords are in, with 20 characters or less (press ENTER to skip): ");
+						do
+						{
+							housingLanguage = input.readLine();
+							if(housingLanguage.length() > 20)
+							{
+								System.out.println("Language has to be 20 characters or less.");
+							}
+						}while(housingLanguage.length() > 20);
 						
 						System.out.print("Enter the square footage of the housing (press ENTER to skip): ");
 						while((housingSquareFootage = input.readLine()) == null && housingSquareFootage.length() == 0);
@@ -302,7 +324,12 @@ public class Main {
 						if(!listing.AddListing(connection.stmt))
 						{
 							System.out.println("Failure to add housing!");
-						};//Property added to tempHousing here
+						}//Property added to tempHousing here
+						
+						if(!listing.AddKeywords(housingKeywords, housingLanguage, connection.stmt))
+						{
+							System.out.println("Failed to add keywords.");
+						}
 						
 						//Adding dates of availability
 						String continueWithDates = "yes";
