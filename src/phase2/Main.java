@@ -783,15 +783,27 @@ public class Main {
 							THFeedbackUseful feedbacks = new THFeedbackUseful();
 							
 							String usefulTHID = "";
+							String countString = "";
+							int usefulFeedbackCount = 0;
+							
 							System.out.print("Enter the THID of the housing you would like useful feedback on: ");
 							while ((usefulTHID = input.readLine()) == null && usefulTHID.length() == 0);
+							System.out.print("Enter the maximum number of feedback ratings you'd like returned: ");
+							while ((countString = input.readLine()) == null && countString.length() == 0);
 							
-							if(!feedbacks.getAllThidFeedbacks(usefulTHID, connection.stmt))
+							try
 							{
-								System.out.println("Error retrieving THID information");
+								usefulFeedbackCount = Integer.parseInt(countString);
+								if(!feedbacks.getAllThidFeedbacks(usefulTHID, usefulFeedbackCount, connection.stmt))
+								{
+									System.out.println("Error retrieving THID information");
+								}
+							}
+							catch(Exception e)
+							{
+								System.out.println("The number you entered was invalid.");
 							}
 						}
-						
 					} 
 					else if(count == 6)
 					{
