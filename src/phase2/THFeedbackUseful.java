@@ -11,7 +11,7 @@ public class THFeedbackUseful
 	
 	public boolean getAllThidFeedbacks(String thid, Statement stmt)
 	{
-		sqlStatement = "SELECT r.feedbackID, AVG(r.rating) FROM rates r, feedback f WHERE(r.feedbackID = f.feedbackID AND f.thid = \"" + thid + "\") GROUP BY r.feedbackID;";
+		sqlStatement = "SELECT f.feedbackText, AVG(r.rating) FROM rates r, feedback f WHERE r.feedbackID = f.feedbackID AND f.thid = " + thid + " GROUP BY r.feedbackID;";
 		try 
 		{
 			result = stmt.executeQuery(sqlStatement);
