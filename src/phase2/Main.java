@@ -780,14 +780,16 @@ public class Main {
 						}
 						else if(feedbackCount == 5)
 						{
-							
+							THFeedbackUseful feedbacks = new THFeedbackUseful();
 							
 							String usefulTHID = "";
 							System.out.print("Enter the THID of the housing you would like useful feedback on: ");
 							while ((usefulTHID = input.readLine()) == null && usefulTHID.length() == 0);
 							
-							
-							
+							if(!feedbacks.getAllThidFeedbacks(usefulTHID, connection.stmt))
+							{
+								System.out.println("Error retrieving THID information");
+							}
 						}
 						
 					} 

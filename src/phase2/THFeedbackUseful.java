@@ -11,7 +11,7 @@ public class THFeedbackUseful
 	
 	public boolean getAllThidFeedbacks(String thid, Statement stmt)
 	{
-		//sqlStatement = "SELECT * FROM visit WHERE (login = \"" + login + "\");";
+		sqlStatement = "SELECT r.feedbackID, AVG(r.rating) FROM rates r, feedback f WHERE(r.feedbackID = f.feedbackID AND f.thid = \"" + thid + "\") GROUP BY r.feedbackID;";
 		try 
 		{
 			result = stmt.executeQuery(sqlStatement);
@@ -21,7 +21,6 @@ public class THFeedbackUseful
 				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
 				{
 					System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
-					//thids.add(result.getString(i));
 				}
 				System.out.println();
 			}
