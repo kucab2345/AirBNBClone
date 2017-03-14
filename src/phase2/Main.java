@@ -530,11 +530,12 @@ public class Main {
 						String feedbackChoice;
 						System.out.println("********************************************************************************************************************");
 
-						System.out.println("What would you like to leave feedback on?");
+						System.out.println("What would you like to do regarding feedback?");
 						System.out.println("1. Mark favorite temp housings:");
 						System.out.println("2. Rate temp housings:");
 						System.out.println("3. Rate another user's feedback on temp housings:");
 						System.out.println("4. Mark another user as trusted: ");
+						System.out.println("5. Find useful feedback on a temp housing: ");
 						System.out.print("Enter your choice here: ");
 						while ((feedbackChoice = input.readLine()) == null && feedbackChoice.length() == 0);
 						try
@@ -546,7 +547,7 @@ public class Main {
 							System.err.println("Error parsing option to int.");
 							continue;
 						}
-						if (feedbackCount < 1 | feedbackCount > 4)
+						if (feedbackCount < 1 | feedbackCount > 5)
 						{
 							System.out.println("Your option " + feedbackChoice + " was not a valid number.");
 							continue;
@@ -638,74 +639,75 @@ public class Main {
 							System.out.println("Type in the ID number only associated with the house:");
 							String desiredThid = "";
 							int theThid = -1;
-							do
+							
+							try
 							{
-								if(theThid < 0)
-								{
-									while ((desiredThid = input.readLine()) == null && desiredThid.length() == 0);
-									theThid = Integer.parseInt(desiredThid);
-
-								}
-								else
-								{
-									System.out.println("The desired ID either doesn't exist or your input is invalid.");
-									while ((desiredThid = input.readLine()) == null && desiredThid.length() == 0);
-									theThid = Integer.parseInt(desiredThid);
-
-								}
-								
-							}while(!theThids.contains(theThid));
+								while ((desiredThid = input.readLine()) == null && desiredThid.length() == 0);
+								theThid = Integer.parseInt(desiredThid);
+							}
+							catch(Exception e)
+							{
+								System.out.println("Invalid entry. Could not be parsed to an integer value.");
+							}
 										
 							HashSet<Integer> feedbackIDs = rate.GetAllUsersFeedback(login, theThid, connection.stmt);
-							System.out.println("Here are the feedbacks associated with the THID: " + theThid);
-							
-							System.out.println("Which feedback do you wish to rate?");
-							System.out.print("Type in only the feedback ID you wish to rate: ");
-							String desiredFeedbackID = "";
-							int feedbackID = -1;
-							do
+							if(feedbackIDs.size() > 0)
 							{
-								if(feedbackID < 0)
+								System.out.println("Here are the feedbacks associated with the THID: " + theThid);
+								
+								System.out.println("Which feedback do you wish to rate?");
+								System.out.print("Type in only the feedback ID you wish to rate: ");
+								String desiredFeedbackID = "";
+								int feedbackID = -1;
+								do
 								{
-									while ((desiredFeedbackID = input.readLine()) == null && desiredFeedbackID.length() == 0);
-									feedbackID = Integer.parseInt(desiredFeedbackID);
+									if(feedbackID < 0)
+									{
+										while ((desiredFeedbackID = input.readLine()) == null && desiredFeedbackID.length() == 0);
+										feedbackID = Integer.parseInt(desiredFeedbackID);
 
+									}
+									else
+									{
+										System.out.println("The desired ID either doesn't exist or your input is invalid.");
+										while ((desiredFeedbackID = input.readLine()) == null && desiredFeedbackID.length() == 0);
+										feedbackID = Integer.parseInt(desiredFeedbackID);
+
+									}
+								}while(!feedbackIDs.contains(feedbackID));
+								String desiredRating ="";
+								int rating = -1;
+								System.out.print("Now give the rating you want, can be 0-2, where 0 is the worst, and 2 is the best: ");
+								do
+								{
+									if(rating < 0)
+									{
+										while ((desiredRating = input.readLine()) == null && desiredRating.length() == 0);
+										rating = Integer.parseInt(desiredRating);
+
+									}
+									else
+									{
+										System.out.println("Your input was invalid, please enter a number from 0-2.");
+										while ((desiredRating = input.readLine()) == null && desiredRating.length() == 0);
+										rating = Integer.parseInt(desiredRating);
+
+									}
+								}while(rating < 0 || rating > 2);
+								if(rate.RateFeedback(login, rating, feedbackID, connection.stmt))
+								{
+									System.out.println("You have successfully rated feedback ID " + feedbackID + " on housing ID " + theThid + ".");
 								}
 								else
 								{
-									System.out.println("The desired ID either doesn't exist or your input is invalid.");
-									while ((desiredFeedbackID = input.readLine()) == null && desiredFeedbackID.length() == 0);
-									feedbackID = Integer.parseInt(desiredFeedbackID);
-
+									System.out.println("Failed to rate feedback.");
 								}
-							}while(!feedbackIDs.contains(feedbackID));
-							String desiredRating ="";
-							int rating = -1;
-							System.out.print("Now give the rating you want, can be 0-2, where 0 is the worst, and 2 is the best: ");
-							do
-							{
-								if(rating < 0)
-								{
-									while ((desiredRating = input.readLine()) == null && desiredRating.length() == 0);
-									rating = Integer.parseInt(desiredRating);
-
-								}
-								else
-								{
-									System.out.println("Your input was invalid, please enter a number from 0-2.");
-									while ((desiredRating = input.readLine()) == null && desiredRating.length() == 0);
-									rating = Integer.parseInt(desiredRating);
-
-								}
-							}while(rating < 0 || rating > 2);
-							if(rate.RateFeedback(login, rating, feedbackID, connection.stmt))
-							{
-								System.out.println("You have successfully rated feedback ID " + feedbackID + " on housing ID " + theThid + ".");
 							}
 							else
 							{
-								System.out.println("Failed to rate feedback.");
+								System.out.println("No feedback exists for this THID to be rated.");
 							}
+							
 						}
 						else if(feedbackCount == 4)
 						{
@@ -775,6 +777,17 @@ public class Main {
 							{
 								System.out.println("Failed to add trusted rating to user of " + desiredLogin + " to the system.");
 							}
+						}
+						else if(feedbackCount == 5)
+						{
+							
+							
+							String usefulTHID = "";
+							System.out.print("Enter the THID of the housing you would like useful feedback on: ");
+							while ((usefulTHID = input.readLine()) == null && usefulTHID.length() == 0);
+							
+							
+							
 						}
 						
 					} 
