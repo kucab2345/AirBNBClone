@@ -52,7 +52,6 @@ public class StatPopularTH
 		}
 		catch(Exception e)
 		{
-			//System.out.println("Error in displayMostExpensiveTH");
 			return false;
 		}
 	}
@@ -100,7 +99,6 @@ public class StatPopularTH
 		}
 		catch(Exception e)
 		{
-			//System.out.println("Error in displayMostExpensiveTH");
 			return false;
 		}
 	}

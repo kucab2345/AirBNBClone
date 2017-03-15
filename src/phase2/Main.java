@@ -25,6 +25,14 @@ public class Main {
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
 	}
+	public static void displayAdminMenu()
+	{
+		 System.out.println("Welcome to the Uotel AirBNB Admin Menu");
+    	 System.out.println("1. See Most Trusted Users");
+    	 System.out.println("2. See Most Useful Users");
+		 System.out.println("To pick your option type in the number associated with that option.");
+    	 System.out.print("Enter the number here: ");
+	}
 	public static void displayStatsMenu()
 	{
 		System.out.println("Which statistic are you interested in?");
@@ -45,7 +53,8 @@ public class Main {
     	 System.out.println("5. Leave Feedback, Feedback Ratings, and User Trust Rating");
     	 System.out.println("6. Browse Property");
     	 System.out.println("7. Statistics");
-    	 System.out.println("8. Exit");
+    	 System.out.println("8. Admin Tools");
+    	 System.out.println("9. Exit");
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
 	}
@@ -208,7 +217,7 @@ public class Main {
 						System.err.println("Error parsing option to int.");
 						continue;
 					}
-					if (count < 1 | count > 8)
+					if (count < 1 | count > 9)
 					{
 						System.out.println("Your option " + count + " was not a valid number.");
 						continue;
@@ -1026,6 +1035,9 @@ public class Main {
 					{
 						String statChoice = "";
 						int statCount = -1;
+						int limit;
+						String stringLimit = "";
+						
 						displayStatsMenu();
 						while ((statChoice = input.readLine()) == null && statChoice.length() == 0);
 						try 
@@ -1044,8 +1056,6 @@ public class Main {
 						}
 						else if (statCount == 1)
 						{
-							int limit;
-							String stringLimit = "";
 							System.out.print("How many results per category would you like at most: ");
 							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
 							try
@@ -1066,8 +1076,6 @@ public class Main {
 						}
 						else if (statCount == 2)
 						{
-							int limit;
-							String stringLimit = "";
 							System.out.print("How many results per category would you like at most: ");
 							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
 							try
@@ -1089,8 +1097,6 @@ public class Main {
 						}
 						else if (statCount == 3)
 						{
-							int limit;
-							String stringLimit = "";
 							System.out.print("How many ratings per category would you like at most: ");
 							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
 							try 
@@ -1110,7 +1116,54 @@ public class Main {
 							}
 						}
 					}
-					else if (count == 8) 
+					else if (count == 8)
+					{
+						String adminChoice = "";
+						int adminCount = -1;
+						displayAdminMenu();
+						while ((adminChoice = input.readLine()) == null && adminChoice.length() == 0);
+						try 
+						{
+							adminCount = Integer.parseInt(adminChoice);
+						} 
+						catch (Exception e) 
+						{
+							System.err.println("Error parsing option to int.");
+							continue;
+						}
+						if (adminCount < 1 | adminCount > 2)
+						{
+							System.out.println("Your option " + adminCount + " was not a valid number.");
+							continue;
+						}
+						else if(adminCount == 1)
+						{
+							
+						}
+						else if(adminCount == 2)
+						{
+							String stringLimit = "";
+							int limit = 0;
+							System.out.print("How many useful users would you like returned: ");
+							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+							try 
+							{
+								limit = Integer.parseInt(stringLimit);
+								AdminTools adminTools = new AdminTools();
+								System.out.println("Here is a list of the " + stringLimit + " most useful users!");
+								if(!adminTools.displayMostUsefulUsers(limit, connection.stmt))
+								{
+									System.out.println("Error retrieving highest rated users.");
+								}
+							} 
+							catch (Exception e) 
+							{
+								System.err.println("Error parsing option to int.");
+								continue;
+							}
+						}
+					}
+					else if (count == 9) 
 					{
 						// TODO: Make this return to the previous menu somehow.
 						// Don't be bad
