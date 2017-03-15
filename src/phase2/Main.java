@@ -1030,8 +1030,8 @@ public class Main {
 						else if (statCount == 3)
 						{
 							StatPopularTH highestRatedTH = new StatPopularTH();
-							System.out.println("Here is a list of the highest rated temporary housings per category (where feedback exists)!");
-							if(!highestRatedTH.displayHighestRatedTH(10, connection.stmt))
+							System.out.println("Here is a list of the highest average rated temporary housings per category (where feedback exists)!");
+							if(!highestRatedTH.displayHighestRatedTH(connection.stmt))
 							{
 								System.out.println("Error retrieving highest rated temporary housings.");
 							}

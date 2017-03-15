@@ -8,7 +8,7 @@ public class StatPopularTH
 	private String sqlStatement;
 	private ResultSet result;
 	
-	public boolean displayHighestRatedTH(int limit, Statement stmt)
+	public boolean displayHighestRatedTH(Statement stmt)
 	{
 		
 		sqlStatement = "Select f.thid, t.category, AVG(f.starRating) from feedback f, temphousing t where (f.thid = t.thid and t.category = ANY(select category from temphousing)) group by f.thid order by AVG(f.starRating) DESC;";
