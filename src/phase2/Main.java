@@ -1052,13 +1052,25 @@ public class Main {
 						}
 						else if (statCount == 3)
 						{
-							StatPopularTH highestRatedTH = new StatPopularTH();
-							System.out.println("Here is a list of the highest average rated temporary housings per category (where feedback exists)!");
-							if(!highestRatedTH.displayHighestRatedTH(connection.stmt))
+							int limit;
+							String stringLimit = "";
+							System.out.print("How many ratings per category would you like at most: ");
+							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+							try 
 							{
-								System.out.println("Error retrieving highest rated temporary housings.");
+								limit = Integer.parseInt(stringLimit);
+								StatPopularTH highestRatedTH = new StatPopularTH();
+								System.out.println("Here is a list of the highest average rated temporary housings per category (where feedback exists)!");
+								if(!highestRatedTH.displayHighestRatedTH(limit, connection.stmt))
+								{
+									System.out.println("Error retrieving highest rated temporary housings.");
+								}
+							} 
+							catch (Exception e) 
+							{
+								System.err.println("Error parsing option to int.");
+								continue;
 							}
-							
 						}
 					}
 					else if (count == 8) 
