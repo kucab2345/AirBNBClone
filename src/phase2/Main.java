@@ -25,7 +25,16 @@ public class Main {
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
 	}
-	
+	public static void displayStatsMenu()
+	{
+		System.out.println("Which statistic are you interested in?");
+   	 	System.out.println("1. Most Popular Temporary Housing");
+   	 	System.out.println("2. Most Expensive Temporary Housing");
+   	 	System.out.println("3. Highest Rated Temporary Housing");
+   	 	System.out.println("4. Exit");
+		System.out.println("To pick your option type in the number associated with that option.");
+		System.out.print("Enter the number here: ");
+	}
 	public static void displayLoggedInMenu()
 	{
 		 System.out.println("Action Center");
@@ -35,7 +44,8 @@ public class Main {
     	 System.out.println("4. Record a Stay");
     	 System.out.println("5. Leave Feedback, Feedback Ratings, and User Trust Rating");
     	 System.out.println("6. Browse Property");
-    	 System.out.println("7. Exit");
+    	 System.out.println("7. Statistics");
+    	 System.out.println("8. Exit");
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
 	}
@@ -198,7 +208,7 @@ public class Main {
 						System.err.println("Error parsing option to int.");
 						continue;
 					}
-					if (count < 1 | count > 7)
+					if (count < 1 | count > 8)
 					{
 						System.out.println("Your option " + count + " was not a valid number.");
 						continue;
@@ -989,7 +999,40 @@ public class Main {
 						
 						browse.RequestHousingInformation(browsePrice, browseCity, browseState, browseKeywords, browseCategory, orderOption, connection.stmt);
 					}
-					else if (count == 7) 
+					else if (count == 7)//Statistics
+					{
+						String statChoice = "";
+						int statCount = -1;
+						displayStatsMenu();
+						while ((statChoice = input.readLine()) == null && statChoice.length() == 0);
+						try 
+						{
+							statCount = Integer.parseInt(statChoice);
+						} 
+						catch (Exception e) 
+						{
+							System.err.println("Error parsing option to int.");
+							continue;
+						}
+						if (statCount < 1 | statCount > 4)
+						{
+							System.out.println("Your option " + statCount + " was not a valid number.");
+							continue;
+						}
+						else if (statCount == 1)
+						{
+							System.out.println("Here is a list of the most popular temporary housings!");
+						}
+						else if (statCount == 2)
+						{
+							System.out.println("Here is a list of the most expensive temporary housings!");
+						}
+						else if (statCount == 3)
+						{
+							System.out.println("Here is a list of the highest rated temporary housings!");
+						}
+					}
+					else if (count == 8) 
 					{
 						// TODO: Make this return to the previous menu somehow.
 						// Don't be bad
