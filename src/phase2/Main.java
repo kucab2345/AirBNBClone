@@ -1044,7 +1044,25 @@ public class Main {
 						}
 						else if (statCount == 1)
 						{
-							System.out.println("Here is a list of the most popular temporary housings!");
+							int limit;
+							String stringLimit = "";
+							System.out.print("How many results per category would you like at most: ");
+							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+							try
+							{
+								limit = Integer.parseInt(stringLimit);
+								StatPopularTH highestRatedTH = new StatPopularTH();
+								System.out.println("Here is a list of the most popular temporary housings!");
+								if(!highestRatedTH.displayMostPopularTH(limit, connection.stmt))
+								{
+									System.out.println("Error retrieving most expensive temporary housings.");
+								}
+							}
+							catch(Exception e)
+							{
+								System.err.println("Error parsing option to int.");
+								continue;
+							}
 						}
 						else if (statCount == 2)
 						{
@@ -1056,7 +1074,7 @@ public class Main {
 							{
 								limit = Integer.parseInt(stringLimit);
 								StatPopularTH highestRatedTH = new StatPopularTH();
-								System.out.println("Here is a list of the most expensive temporary housings!");
+								System.out.println("Here is a list of the most expensive temporary housings on average!");
 								if(!highestRatedTH.displayMostExpensiveTH(limit, connection.stmt))
 								{
 									System.out.println("Error retrieving most expensive temporary housings.");
