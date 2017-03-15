@@ -23,6 +23,8 @@ public class StatPopularTH
 		 * Try to edit this if you'd like. plzfixfeifei
 		 */
 		//sqlStatement = //????
+		
+		sqlStatement = "Select f.thid, t.category, AVG(f.starRating) from feedback f, temphousing t where (f.thid = t.thid and t.category = ANY(select category from temphousing)) group by f.thid order by AVG(f.starRating) DESC;";
 		try 
 		{
 			result = stmt.executeQuery(sqlStatement);
