@@ -236,6 +236,7 @@ public class Main {
 								
 							}while(!housesAvail.contains(requested));
 							
+							Suggestions suggest = new Suggestions(login, Integer.parseInt(requested));
 							
 							System.out.println("Here are the available dates: ");
 							int numAvail = reservation.DisplayAvailableDays(Integer.parseInt(requested), connection.stmt);
@@ -245,6 +246,10 @@ public class Main {
 								System.out.println("Input the period ID related to which dates you want:");
 								requested = input.readLine();
 								periodsID.add(Integer.parseInt(requested));
+								
+								suggest.MakeSuggestions(connection.stmt);
+								System.out.println("Above are some housing options that other users have reserved who have also used temporary housing ID " + housesID.get(housesID.size() - 1) + ".");
+								
 								System.out.println("Would you like to reserve another? (yes/no)");
 								answer = input.readLine();
 								
@@ -260,9 +265,27 @@ public class Main {
 							
 						} while(answer.equals("yes") || answer.equals("y"));
 						
+						//Check if this is good before adding
+						System.out.println("Are these the reservations you would like to make?");
 						for(int i = 0; i < housesID.size(); i++)
 						{
-							reservation.AddReservation(housesID.get(i), periodsID.get(i), connection.stmt);
+							System.out.println("Temporary house of ID: " + reservation.GetHouseInformation(housesID.get(i), connection.stmt)  + "\n  Staying between the dates of " + reservation.GetDates(periodsID.get(i), connection.stmt));
+						}
+						System.out.print("Type yes or y to confirm these reservations: ");
+						String confirmation = input.readLine();
+						confirmation = confirmation.toLowerCase();
+						if(confirmation.equals("yes") || confirmation.equals("y") || confirmation.equals("yee"))
+						{
+							System.out.println("Making reservations...");
+							for(int i = 0; i < housesID.size(); i++)
+							{
+								reservation.AddReservation(housesID.get(i), periodsID.get(i), connection.stmt);
+							}
+						}
+						else
+						{
+							System.out.println("Cancelling reservations...");
+							System.out.println("Reservations cancelled.");
 						}
 					} 
 					else if (count == 2)
