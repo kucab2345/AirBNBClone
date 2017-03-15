@@ -309,4 +309,102 @@ public class Reserve
 		}
 		
 	}
+	
+	public String GetDates(int desiredPID, Statement statement)
+	{
+		String info = "";
+		sqlStatement = "SELECT fromDate, toDate FROM period WHERE periodID = " + desiredPID + ";";
+		ResultSet result = null;
+		try
+		{
+			result = statement.executeQuery(sqlStatement);
+			while(result.next())
+			{
+				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
+				{
+					if(i == 1)
+					{
+						info += result.getString(i);
+					}
+					else if(i == 2)
+					{
+						info += " until " + result.getString(i) + ".";
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Cannot execute the query to get dates.");
+		}
+		return info;
+	}
+	
+	public String GetHouseInformation(int desiredTHID, Statement statement)
+	{
+		String info = "";
+		sqlStatement = "SELECT * FROM temphousing WHERE thid = " + desiredTHID + ";";
+		ResultSet result = null;
+		try
+		{
+			result = statement.executeQuery(sqlStatement);
+			while(result.next())
+			{
+				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
+				{
+					if(i == 1)
+					{
+						info += result.getString(i);
+					}
+					else if(i == 2)
+					{
+						info += " of category type: " + result.getString(i);
+					}
+					else if(i == 3)
+					{
+						info += " with the description: \"" + result.getString(i) + "\".";
+					}
+					else if(i == 4)
+					{
+						info += "\n  It has this square footage of space: " + result.getString(i);
+					}
+					else if(i == 5)
+					{
+						info += " and this many cars allowed: " + result.getString(i);
+					}
+					else if(i == 6)
+					{
+						if(result.getBoolean(i))
+						{
+							info += ".\n  There are neighbors with this temporary housing.";
+						}
+						else
+						{
+							info += ".\n  There are no neighbors with this temporary housing.";
+						}
+						
+					}
+					else if(i == 7)
+					{
+						info += "\n  This place is owned by the user " + result.getString(i);
+					}
+					else if(i == 8)
+					{
+						info += " and located in " + result.getString(i);
+					}
+					else if(i == 9)
+					{
+						info += ", " + result.getString(i) + ".";
+					}
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Cannot execute the query to get house info.");
+		}
+		return info;
+	}
 }
