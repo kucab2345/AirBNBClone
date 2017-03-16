@@ -13,7 +13,7 @@ public class THFeedbackUseful
 	public boolean getAllThidFeedbacks(String thid, int numberOfResults, Statement statement)
 	{
 		//int limitCount = 0;
-		sqlStatement = "SELECT f.feedbackText, AVG(r.rating) FROM rates r, feedback f WHERE r.feedbackID = f.feedbackID AND f.thid = " + thid + " GROUP BY r.feedbackID order by Avg(r.rating) DESC LIMIT " + numberOfResults + ";";
+		sqlStatement = "SELECT f.feedbackText, AVG(r.rating) FROM rates r, feedback f WHERE r.feedbackID = f.feedbackID AND f.thid = " + thid + " GROUP BY r.feedbackID ORDER BY AVG(r.rating) DESC LIMIT " + numberOfResults + ";";
 		try 
 		{
 			result = statement.executeQuery(sqlStatement);
