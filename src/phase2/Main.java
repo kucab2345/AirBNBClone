@@ -1116,7 +1116,7 @@ public class Main {
 							}
 						}
 					}
-					else if (count == 8)
+					else if (count == 8)//Admin tools
 					{
 						String adminChoice = "";
 						int adminCount = -1;
@@ -1138,7 +1138,25 @@ public class Main {
 						}
 						else if(adminCount == 1)
 						{
-							
+							String stringLimit = "";
+							int limit = 0;
+							System.out.print("How many users would you like returned: ");
+							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+							try 
+							{
+								limit = Integer.parseInt(stringLimit);
+								AdminTools adminTools = new AdminTools();
+								System.out.println("Here is a list of the " + stringLimit + " most useful users!");
+								if(!adminTools.displayMostTrustedUsers(limit, connection.stmt))
+								{
+									System.out.println("Error retrieving highest rated users.");
+								}
+							} 
+							catch (Exception e) 
+							{
+								System.err.println("Error parsing option to int.");
+								continue;
+							}
 						}
 						else if(adminCount == 2)
 						{
