@@ -280,7 +280,7 @@ public class Main {
 						{
 							System.out.println("Temporary house of ID: " + reservation.GetHouseInformation(housesID.get(i), connection.stmt)  + "\n  Staying between the dates of " + reservation.GetDates(periodsID.get(i), connection.stmt));
 						}
-						System.out.print("Type yes or y to confirm these reservations: ");
+						System.out.print("Type \"yes\" or \"y\" to confirm these reservations: ");
 						String confirmation = input.readLine();
 						confirmation = confirmation.toLowerCase();
 						if(confirmation.equals("yes") || confirmation.equals("y") || confirmation.equals("yee"))
@@ -526,16 +526,22 @@ public class Main {
 						int thid;
 						float cost;
 						int periodID;
+						ArrayList<Integer> periodIDs = new ArrayList<Integer>();
+						ArrayList<Integer> thids = new ArrayList<Integer>();
+						ArrayList<Boolean> wantsToStays = new ArrayList<Boolean>();
+						ArrayList<Float> costs = new ArrayList<Float>();
 						HashSet<String> validReserves = reservations.DisplayAllReservationsForUser(login, connection.stmt);
-						boolean wantsToStay = true;
+						int badInput = -1;
 						do
 						{
 							System.out.print("Enter the temporary house ID matching the reservation you wish to record your stay at this time: ");
 							while((requested = input.readLine()) == null && requested.length() == 0); //TODO need to do error checking
 							thidAndPeriodID = requested;
 							thid = Integer.parseInt(requested);
+							
 							cost = reservations.SelectCostOfReserve(thid, login, connection.stmt);
 							periodID = reservations.SelectPeriodIDOfReserve(thid, login, connection.stmt);
+
 							System.out.print("And the period ID: ");
 							while((requested = input.readLine()) == null && requested.length() == 0);//need to do error checking here as well
 							thidAndPeriodID += " " + requested;
@@ -545,26 +551,65 @@ public class Main {
 							while((requested = input.readLine()) == null && requested.length() == 0);//need to do error checking here as well
 							if(Float.parseFloat(requested) != cost)
 							{
-								wantsToStay = false;
-								break;
+								wantsToStays.add(false);
+								thids.add(badInput);
+								periodIDs.add(badInput);
+								costs.add(cost);
 							}
-						}while(!validReserves.contains(thidAndPeriodID));
+							else
+							{
+								if(!validReserves.contains(thidAndPeriodID))
+								{
+									System.out.println("The temporary housing ID or period ID you entered was invalid!");
+									wantsToStays.add(false);
+									thids.add(badInput);
+									periodIDs.add(badInput);
+									costs.add(cost);
+								}
+								else
+								{
+									thids.add(thid);
+									periodIDs.add(periodID);
+									wantsToStays.add(true);
+									costs.add(cost);
+								}
+							}
+							System.out.println("Would you like to mark another stay? (yes/no)");
+							requested = input.readLine();
+							requested = requested.toLowerCase();
+							badInput--;
+						}while(requested.equals("yes") || requested.equals("y") || requested.equals("yee"));
 						
-						if(wantsToStay)
+						System.out.println("Is the following information correct? ");
+						for(int y = 0; y < wantsToStays.size(); y++)
 						{
-							reservations.RemoveReservation(login, thid, periodID, connection.stmt);
-							System.out.println("Thanks for staying with Uotel AirBNB!");
-							Stays newStay = new Stays(thidAndPeriodID);
-							newStay.AddStay(login, cost, connection.stmt); //TODO WRONG RIGHT NOW, PAYMENT ALL OF RESERVE COST
+							if(wantsToStays.get(y))
+							{
+								//print all the stuff
+								System.out.println("User \"" + login + "\" wants to stay at temporary house ID number " + thids.get(y) + "\n	associated with the period ID of " + periodIDs.get(y) + ".");
+								System.out.println("	This stay is between the dates of " + reservations.GetDates(periodIDs.get(y), connection.stmt));
+							}
 						}
-						else
+						System.out.print("If it is correct, please type \"yes\" or \"y\": ");
+						String answer = input.readLine();
+						if(answer.equals("yes") || answer.equals("y") || answer.equals("yee"))
 						{
-							System.out.println("Cancelling check in.");
+							for(int x = 0; x < wantsToStays.size(); x++)
+							{
+								if(wantsToStays.get(x))
+								{
+									reservations.RemoveReservation(login, thids.get(x), periodIDs.get(x), connection.stmt);
+									System.out.println("Thanks for staying with Uotel AirBNB!");
+									String combinedThidAndPeriodID = thids.get(x) + " " + periodIDs.get(x);
+									Stays newStay = new Stays(combinedThidAndPeriodID);
+									newStay.AddStay(login, costs.get(x), connection.stmt); 
+								}
+								else
+								{
+									System.out.println("Cancelling check in because cost or temporary housing ID or period ID entered didnt match.");
+								}
+							}
 						}
-						
-						
-						
-						
 					}
 					else if (count == 5)//All types of feedback
 					{
