@@ -229,11 +229,11 @@ public class Reserve
 		
 	}
 	
-	public float SelectCostOfReserve(int thid, String login, Statement statement)
+	public float SelectCostOfReserve(int thid, int givenPeriodID, String login, Statement statement)
 	{
 		float cost = -1;
 		ResultSet result = null;
-		sqlStatement = "SELECT r.cost FROM reserve r WHERE r.thid = " + thid + " AND r.login = \"" + login + "\";";
+		sqlStatement = "SELECT r.cost FROM reserve r WHERE r.thid = " + thid + " AND r.login = \"" + login + "\" AND r.periodID = " + givenPeriodID + ";";
 		try
 		{
 			result = statement.executeQuery(sqlStatement);

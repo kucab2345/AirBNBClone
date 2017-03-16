@@ -53,8 +53,9 @@ public class Main {
     	 System.out.println("5. Leave Feedback, Feedback Ratings, and User Trust Rating");
     	 System.out.println("6. Browse Property");
     	 System.out.println("7. Statistics");
-    	 System.out.println("8. Admin Tools");
-    	 System.out.println("9. Exit");
+    	 System.out.println("8. Degrees of Separation");
+    	 System.out.println("9. Admin Tools");
+    	 System.out.println("10. Exit");
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
 	}
@@ -217,7 +218,7 @@ public class Main {
 						System.err.println("Error parsing option to int.");
 						continue;
 					}
-					if (count < 1 | count > 9)
+					if (count < 1 | count > 10)
 					{
 						System.out.println("Your option " + count + " was not a valid number.");
 						continue;
@@ -649,12 +650,14 @@ public class Main {
 							thidAndPeriodID = requested;
 							thid = Integer.parseInt(requested);
 							
-							cost = reservations.SelectCostOfReserve(thid, login, connection.stmt);
-							periodID = reservations.SelectPeriodIDOfReserve(thid, login, connection.stmt);
+							//periodID = reservations.SelectPeriodIDOfReserve(thid, login, connection.stmt);
 
 							System.out.print("And the period ID: ");
 							while((requested = input.readLine()) == null && requested.length() == 0);//need to do error checking here as well
+							periodID = Integer.parseInt(requested);
 							thidAndPeriodID += " " + requested;
+							
+							cost = reservations.SelectCostOfReserve(thid, periodID, login, connection.stmt);
 							DecimalFormat decimalFormat = new DecimalFormat("0.00");
 					        String costAsString = decimalFormat.format(cost);
 							System.out.print("Please retype the amount shown without the dollar sign ($" + costAsString + "), the cost associated with the temporary housing, to confirm the price: ");
@@ -691,13 +694,16 @@ public class Main {
 						}while(requested.equals("yes") || requested.equals("y") || requested.equals("yee"));
 						
 						System.out.println("Is the following information correct? ");
+						DecimalFormat decimalFormat = new DecimalFormat("0.00");
+				        
 						for(int y = 0; y < wantsToStays.size(); y++)
 						{
 							if(wantsToStays.get(y))
 							{
 								//print all the stuff
+								String costAsString = decimalFormat.format(costs.get(y));
 								System.out.println("User \"" + login + "\" wants to stay at temporary house ID number " + thids.get(y) + "\n	associated with the period ID of " + periodIDs.get(y) + ".");
-								System.out.println("	This stay is between the dates of " + reservations.GetDates(periodIDs.get(y), connection.stmt));
+								System.out.println("	This stay is between the dates of " + reservations.GetDates(periodIDs.get(y), connection.stmt) + "\n	At the total cost of $" + costAsString);
 							}
 						}
 						System.out.print("If it is correct, please type \"yes\" or \"y\": ");
@@ -1271,7 +1277,44 @@ public class Main {
 							}
 						}
 					}
-					else if (count == 8)
+					else if(count == 8)
+					{
+						System.out.println("Enter two usernames to find their degree of separation by temporary housing favorited.\nThe returned value will be either 1, 2, or -1 meaning they are either greater than 2 degrees separated\nor not connected at all.");
+						DegreesOfSeparation degrees = new DegreesOfSeparation();
+						HashSet<String> allUsers = degrees.GetAllUsers(connection.stmt);//print all user logins
+						String user1;
+						String user2;
+						do
+						{
+							System.out.print("Enter the first user's username: ");
+							user1 = input.readLine();
+							if(!allUsers.contains(user1))
+							{
+								System.out.println("That user doesn't exist!");
+							}
+						}while(!allUsers.contains(user1));
+						
+						do
+						{
+							System.out.print("Enter the second user's username: ");
+							user2 = input.readLine();
+							if(!allUsers.contains(user2))
+							{
+								System.out.println("That user doesn't exist!");
+							}
+						}while(!allUsers.contains(user2));
+						int degree = degrees.discoverDegreeOfSeparation(user1, user2, connection.stmt);
+						if(degree < 0)
+						{
+							System.out.println("User " + user1 + " and user " + user2 + " are either more than 2 degrees apart or are not connected at all.");
+						}
+						else
+						{
+							System.out.println("User " + user1 + " and user " + user2 + " are " + degree + " degree(s) apart!");
+						}
+						
+					}
+					else if (count == 9)
 					{
 						String adminChoice = "";
 						int adminCount = -1;
@@ -1318,7 +1361,7 @@ public class Main {
 							}
 						}
 					}
-					else if (count == 9) 
+					else if (count == 10) 
 					{
 						// TODO: Make this return to the previous menu somehow.
 						// Don't be bad
