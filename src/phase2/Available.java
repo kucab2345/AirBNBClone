@@ -9,9 +9,9 @@ public class Available
 	private int periodID;
 	private String sqlStatement;
 	
-	public boolean AddAvailable(float cost, Statement stmt)
+	public boolean AddAvailable(float cost, Statement statement)
 	{
-		return AddAvailable(cost, stmt, -1);
+		return AddAvailable(cost, statement, -1);
 	}
 	
 	public boolean AddAvailable(float cost, Statement stmt, int thid)

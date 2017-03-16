@@ -11,12 +11,12 @@ public class FeedbackTH
 	private ResultSet result; 
 	private HashSet<String> thids = new HashSet<String>();
 	
-	public boolean showAllVisitedTH(String login, Statement stmt)
+	public boolean showAllVisitedTH(String login, Statement statement)
 	{
 		sqlStatement = "SELECT * FROM visit WHERE (login = \"" + login + "\");";
 		try 
 		{
-			result = stmt.executeQuery(sqlStatement);
+			result = statement.executeQuery(sqlStatement);
 
 			while(result.next())
 			{
@@ -37,7 +37,7 @@ public class FeedbackTH
 			return false;
 		}
 	}
-	public boolean MarkTHFeedback(String feedbackText, String thid, String login, String feedbackKeyWords, int starRating, Statement stmt)
+	public boolean MarkTHFeedback(String feedbackText, String thid, String login, String feedbackKeyWords, int starRating, Statement statement)
 	{
 		
 		sqlStatement = "INSERT INTO feedback VALUES (DEFAULT, \"" + feedbackText + "\",now(),\"" + thid + "\",\"" + login + "\",\"" + feedbackKeyWords + "\"," + starRating +");";//Now() works but it throws a warning since it is also trying to push in the time of date as well as today's date
@@ -46,7 +46,7 @@ public class FeedbackTH
 		{
 			if(thids.contains(thid))
 			{
-				rowsAffected = stmt.executeUpdate(sqlStatement);
+				rowsAffected = statement.executeUpdate(sqlStatement);
 				return true;
 			}
 			else

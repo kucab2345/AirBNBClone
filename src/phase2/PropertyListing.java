@@ -28,14 +28,14 @@ public class PropertyListing
 		state = inState;
 	}
 	
-	public boolean AddListing(Statement stmt)
+	public boolean AddListing(Statement statement)
 	{
 		sqlStatement = "INSERT INTO temphousing VALUES(DEFAULT,\"" + category + "\",\"" + description + "\","
 				+ squareFootage + "," + carLimit + "," + neighbors + ",\"" + login + "\",\"" + city + "\",\"" + state + "\");";
 		int rowsAffected = 0;
 		try
 		{
-			rowsAffected = stmt.executeUpdate(sqlStatement);
+			rowsAffected = statement.executeUpdate(sqlStatement);
 			return true;
 		}
 		catch(Exception e)

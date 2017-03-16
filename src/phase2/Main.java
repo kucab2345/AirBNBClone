@@ -1344,7 +1344,7 @@ public class Main {
 							{
 								limit = Integer.parseInt(stringLimit);
 								AdminTools adminTools = new AdminTools();
-								System.out.println("Here is a list of the " + stringLimit + " most useful users!");
+								System.out.println("Here is a list of the " + stringLimit + " most trusted users!");
 								if(!adminTools.displayMostTrustedUsers(limit, connection.stmt))
 								{
 									System.out.println("Error retrieving highest rated users.");
