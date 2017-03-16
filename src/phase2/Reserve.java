@@ -141,10 +141,12 @@ public class Reserve
 					System.out.println(output.getMetaData().getColumnName(i) + ": " + output.getString(i) + " ");
 				}
 				System.out.println("===============================================================================================");
-				//System.out.println();
+
 			}
-			System.out.println("Please select which house you would like to reserve.");
-			//statement.close();
+			if(all)
+			{
+				System.out.println("Please select which house you would like to reserve.");
+			}
 			return thids;
 		}
 		catch (Exception e) 

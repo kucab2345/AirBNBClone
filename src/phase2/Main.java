@@ -47,7 +47,7 @@ public class Main {
 	{
 		 System.out.println("Action Center");
     	 System.out.println("1. Make New Reservation");
-    	 System.out.println("2. Make Property Listing");
+    	 System.out.println("2. Make Property Listing Or Update Existing");
     	 System.out.println("3. Add More Availability Dates to Owned Property");
     	 System.out.println("4. Record a Stay");
     	 System.out.println("5. Leave Feedback, Feedback Ratings, and User Trust Rating");
@@ -303,148 +303,258 @@ public class Main {
 						String housingDescription = "";
 						String housingKeywords = "";
 						String housingLanguage = "";
-						String housingSquareFootage = "0";
+						String housingSquareFootage = "";
 						String housingCarLimit = "";
 						String housingNeighbors = "";
 						String housingCity;
 						String housingState;
 						boolean housingNeighborsBool = false;
-						
-						System.out.print("Type in the housing category (ie, Apartment, Condo, House, etc): ");
-						while((housingCategory = input.readLine()) == null && housingCategory.length() == 0);
-						
-						System.out.print("Enter a description of the housing (press ENTER to skip): ");
-						while((housingDescription = input.readLine()) == null && housingDescription.length() == 0);
-						
-						System.out.print("Enter keywords associated with this housing of 50 characters or less (press ENTER to skip): ");
-						do
+						String decision;
+						System.out.println("Do you wish to update an existing or create a new one? (Type in just the number associated with the choice you want)");
+						System.out.println("1. Make New");
+				    	System.out.println("2. Update Existing");
+						while((decision = input.readLine()) == null & decision.length() == 0);
+						if(Integer.parseInt(decision) == 1)				    	
 						{
-							housingKeywords = input.readLine();
-							if(housingKeywords.length() > 50)
+							System.out.print("Type in the housing category (ie, Apartment, Condo, House, etc): ");
+							while((housingCategory = input.readLine()) == null && housingCategory.length() == 0);
+							
+							System.out.print("Enter a description of the housing (press ENTER to skip): ");
+							while((housingDescription = input.readLine()) == null && housingDescription.length() == 0);
+							
+							System.out.print("Enter keywords associated with this housing of 50 characters or less (press ENTER to skip): ");
+							do
 							{
-								System.out.println("Keywords have to be 50 characters or less.");
+								housingKeywords = input.readLine();
+								if(housingKeywords.length() > 50)
+								{
+									System.out.println("Keywords have to be 50 characters or less.");
+								}
+							}while(housingKeywords.length() > 50);
+							
+							System.out.print("Enter the language the keywords are in, with 20 characters or less (press ENTER to skip): ");
+							do
+							{
+								housingLanguage = input.readLine();
+								if(housingLanguage.length() > 20)
+								{
+									System.out.println("Language has to be 20 characters or less.");
+								}
+							}while(housingLanguage.length() > 20);
+							
+							System.out.print("Enter the square footage of the housing (press ENTER to skip): ");
+							while((housingSquareFootage = input.readLine()) == null && housingSquareFootage.length() == 0);
+	
+							System.out.print("Enter the car parking limit of the housing (press ENTER to skip): ");
+							while((housingCarLimit = input.readLine()) == null && housingCarLimit.length() == 0);
+							
+							System.out.print("Enter whether or not there are neighbors((y)es or (n)o). (press ENTER to skip): ");
+							while((housingNeighbors = input.readLine()) == null && housingNeighbors.length() == 0);
+							housingNeighbors = housingNeighbors.toLowerCase();
+							
+							if(housingNeighbors.equals("yes") || housingNeighbors.equals("y"))
+							{
+								housingNeighborsBool = true;
 							}
-						}while(housingKeywords.length() > 50);
-						
-						System.out.print("Enter the language the keywords are in, with 20 characters or less (press ENTER to skip): ");
-						do
+							
+							System.out.print("Enter what city the house is in (30 character max): ");
+							while((housingCity = input.readLine()) == null && housingCity.length() == 0);
+							
+							System.out.print("Enter what state the house is in (30 character max): ");
+							while((housingState = input.readLine()) == null && housingState.length() == 0);
+							
+							int housingCarLimitInt = Integer.parseInt(housingCarLimit);
+							double housingSquareFootageDouble = Double.parseDouble(housingSquareFootage);
+							
+							PropertyListing listing = new PropertyListing(login,housingCategory,housingDescription,
+									housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool, housingCity, housingState);
+							
+							if(!listing.AddListing(connection.stmt))
+							{
+								System.out.println("Failure to add housing!");
+							}//Property added to tempHousing here
+							
+							if(!listing.AddKeywords(housingKeywords, housingLanguage, connection.stmt, false, -1))
+							{
+								System.out.println("Failed to add keywords.");
+							}
+							
+							//Adding dates of availability
+							String continueWithDates = "yes";
+							String fromDate, toDate;
+							Map<Date,Date> dateMap = new Hashtable<Date,Date>();
+							while(continueWithDates.equals("yes") || continueWithDates.equals("y"))
+							{
+								String pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$";
+								Pattern patternThing = Pattern.compile(pattern);
+								Matcher match = null;
+								System.out.print("Enter the starting date this property is available in YYYY-MM-DD format:");
+								boolean valid = false;
+								do
+								{
+									while((fromDate = input.readLine()) == null && fromDate.length() == 0);
+									match = patternThing.matcher(fromDate);
+									if(match.find())
+									{
+										valid = true;
+									}
+									else
+									{
+										System.out.println("Please put your date in valid YYYY-MM-DD format.");
+									}
+								}while(!valid);
+								valid = false;
+								System.out.print("Enter the ending date this property is available in YYYY-MM-DD format:");
+								do
+								{
+									while((toDate = input.readLine()) == null && toDate.length() == 0);
+									match = patternThing.matcher(fromDate);
+									if(match.find())
+									{
+										valid = true;
+									}
+									else
+									{
+										System.out.println("Please put your date in valid YYYY-MM-DD format.");
+									}
+								}while(!valid);
+								
+								Period period = new Period();
+								if(!period.AddPeriod(fromDate, toDate, connection.stmt))
+								{
+									System.out.println("Failure to add periods!");
+								}
+								
+								//Get the price, add price and dates to Available
+								String costPerNight;
+								System.out.print("Enter the cost per night:");
+								while((costPerNight = input.readLine()) == null && costPerNight.length() == 0);
+								float costPerNightf = Float.parseFloat(costPerNight);
+								Available available = new Available();
+								if(!available.AddAvailable(costPerNightf,connection.stmt))
+								{
+									System.out.println("Failure to add availablilties!");
+								}
+								
+								System.out.print("Would you like to add more dates of availability? (y)es or (n)o:");
+								while((continueWithDates = input.readLine()) == null && continueWithDates.length() == 0);
+								continueWithDates = continueWithDates.toLowerCase();
+								if(continueWithDates.equals("no") || continueWithDates == "n")
+								{
+									continueWithDates = "no";
+								}
+							}
+						}
+						else if(Integer.parseInt(decision) == 2)
 						{
-							housingLanguage = input.readLine();
-							if(housingLanguage.length() > 20)
+							System.out.println("Which listing would you like to update?");
+							Reserve reservation = new Reserve(login, password);
+							HashSet<String> housesAvail = reservation.DisplayTempHousesAvailable(login, connection.stmt, false);
+							System.out.print("Enter the temporary housing ID of the property you would like to update: ");
+							String updateThid;
+							while((updateThid = input.readLine()) == "");
+							if(!housesAvail.contains(updateThid))
 							{
-								System.out.println("Language has to be 20 characters or less.");
+								System.out.println("That is not a valid temporary housing ID.");
+								continue;
 							}
-						}while(housingLanguage.length() > 20);
-						
-						System.out.print("Enter the square footage of the housing (press ENTER to skip): ");
-						while((housingSquareFootage = input.readLine()) == null && housingSquareFootage.length() == 0);
+							int thid = Integer.parseInt(updateThid);
+							System.out.println("Update the following categories, if you wish not to change a category skip it by hitting ENTER:");
+							
+							System.out.print("Update housing category (ie, Apartment, Condo, House, etc): ");
+							housingCategory = input.readLine();
+							
+							System.out.print("Update description of the housing: ");
+							housingDescription = input.readLine();
+							
+							System.out.print("Update keywords associated with this housing of 50 characters or less: ");
+							do
+							{
+								housingKeywords = input.readLine();
+								if(housingKeywords.length() > 50)
+								{
+									System.out.println("Keywords have to be 50 characters or less.");
+								}
+							}while(housingKeywords.length() > 50);
+							
+							System.out.print("Update the language the keywords are in, with 20 characters or less: ");
+							do
+							{
+								housingLanguage = input.readLine();
+								if(housingLanguage.length() > 20)
+								{
+									System.out.println("Language has to be 20 characters or less.");
+								}
+							}while(housingLanguage.length() > 20);
+							
+							System.out.print("Update the square footage of the housing: ");
+							housingSquareFootage = input.readLine();
 
-						System.out.print("Enter the car parking limit of the housing (press ENTER to skip): ");
-						while((housingCarLimit = input.readLine()) == null && housingCarLimit.length() == 0);
-						
-						System.out.print("Enter whether or not there are neighbors((y)es or (n)o). (press ENTER to skip): ");
-						while((housingNeighbors = input.readLine()) == null && housingNeighbors.length() == 0);
-						housingNeighbors = housingNeighbors.toLowerCase();
-						
-						if(housingNeighbors.equals("yes") || housingNeighbors.equals("y"))
-						{
-							housingNeighborsBool = true;
-						}
-						
-						System.out.print("Enter what city the house is in (30 character max): ");
-						while((housingCity = input.readLine()) == null && housingCity.length() == 0);
-						
-						System.out.print("Enter what state the house is in (30 character max): ");
-						while((housingState = input.readLine()) == null && housingState.length() == 0);
-						
-						int housingCarLimitInt = Integer.parseInt(housingCarLimit);
-						double housingSquareFootageDouble = Double.parseDouble(housingSquareFootage);
-						
-						PropertyListing listing = new PropertyListing(login,housingCategory,housingDescription,
-								housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool, housingCity, housingState);
-						
-						if(!listing.AddListing(connection.stmt))
-						{
-							System.out.println("Failure to add housing!");
-						}//Property added to tempHousing here
-						
-						if(!listing.AddKeywords(housingKeywords, housingLanguage, connection.stmt))
-						{
-							System.out.println("Failed to add keywords.");
-						}
-						
-						//Adding dates of availability
-						String continueWithDates = "yes";
-						String fromDate, toDate;
-						Map<Date,Date> dateMap = new Hashtable<Date,Date>();
-						while(continueWithDates.equals("yes") || continueWithDates.equals("y"))
-						{
-							String pattern = "^[0-9]{4}-[0-9]{2}-[0-9]{2}$";
-							Pattern patternThing = Pattern.compile(pattern);
-							Matcher match = null;
-							System.out.print("Enter the starting date this property is available in YYYY-MM-DD format:");
-							boolean valid = false;
-							do
-							{
-								while((fromDate = input.readLine()) == null && fromDate.length() == 0);
-								match = patternThing.matcher(fromDate);
-								if(match.find())
-								{
-									valid = true;
-								}
-								else
-								{
-									System.out.println("Please put your date in valid YYYY-MM-DD format.");
-								}
-							}while(!valid);
-							valid = false;
-							System.out.print("Enter the ending date this property is available in YYYY-MM-DD format:");
-							do
-							{
-								while((toDate = input.readLine()) == null && toDate.length() == 0);
-								match = patternThing.matcher(fromDate);
-								if(match.find())
-								{
-									valid = true;
-								}
-								else
-								{
-									System.out.println("Please put your date in valid YYYY-MM-DD format.");
-								}
-							}while(!valid);
+							System.out.print("Update the car parking limit of the housing: ");
+							housingCarLimit = input.readLine();
 							
-							Period period = new Period();
-							if(!period.AddPeriod(fromDate, toDate, connection.stmt))
+							System.out.print("Update whether or not there are neighbors (\"yes\" or \"no\", Skipping this results in no): ");
+							housingNeighbors = input.readLine();
+							housingNeighbors = housingNeighbors.toLowerCase();
+							
+							if(housingNeighbors.equals("yes") || housingNeighbors.equals("y"))
 							{
-								System.out.println("Failure to add periods!");
+								housingNeighborsBool = true;
 							}
 							
-							//Get the price, add price and dates to Available
-							String costPerNight;
-							System.out.print("Enter the cost per night:");
-							while((costPerNight = input.readLine()) == null && costPerNight.length() == 0);
-							float costPerNightf = Float.parseFloat(costPerNight);
-							Available available = new Available();
-							if(!available.AddAvailable(costPerNightf,connection.stmt))
+							System.out.print("Update what city the house is in (30 character max): ");
+							housingCity = input.readLine();
+							
+							System.out.print("Update what state the house is in (30 character max): ");
+							housingState = input.readLine();
+							int housingCarLimitInt;
+							if(housingCarLimit.equals(""))
 							{
-								System.out.println("Failure to add availablilties!");
+								housingCarLimitInt = -1;
+							}
+							else
+							{
+								housingCarLimitInt = Integer.parseInt(housingCarLimit);
 							}
 							
-							System.out.print("Would you like to add more dates of availability? (y)es or (n)o:");
-							while((continueWithDates = input.readLine()) == null && continueWithDates.length() == 0);
-							continueWithDates = continueWithDates.toLowerCase();
-							if(continueWithDates.equals("no") || continueWithDates == "n")
+							double housingSquareFootageDouble;
+							if(housingSquareFootage.equals(""))
 							{
-								continueWithDates = "no";
+								housingSquareFootageDouble = -1;
+							}
+							else
+							{
+								housingSquareFootageDouble = Double.parseDouble(housingSquareFootage);
+							}
+
+							PropertyListing listing = new PropertyListing(login,housingCategory,housingDescription,
+									housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool, housingCity, housingState);
+							
+							
+							if(listing.UpdateTH(thid, connection.stmt))
+							{
+								System.out.println("Successfully updated temporary housing.");
+							}
+							else
+							{
+								System.out.println("Failed to update temporary housing ID number: " + thid);
+							}
+							if(listing.UpdateTHKeywords(thid, housingKeywords, housingLanguage, connection.stmt))
+							{
+								System.out.println("Successfully updated keywords associated with the property.");
+							}
+							else
+							{
+								System.out.println("Failed to update keywords associated with this property.");
 							}
 						}
-						
-						
+											
 					}
 					else if (count == 3)
 					{
 						Reserve reservation = new Reserve(login, password);
 						HashSet<String> housesAvail = reservation.DisplayTempHousesAvailable(login, connection.stmt, false);
+						System.out.println("Please select which housing you would like to add more dates to.");
 						String requested;
 						do
 						{

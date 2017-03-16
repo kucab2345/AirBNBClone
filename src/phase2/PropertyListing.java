@@ -44,7 +44,7 @@ public class PropertyListing
 		}
 	}
 	
-	public boolean AddKeywords(String words, String lang, Statement statement)
+	public boolean AddKeywords(String words, String lang, Statement statement, boolean updatingExisting, int existingThid)
 	{
 		if(lang.equals(""))
 		{
@@ -86,29 +86,36 @@ public class PropertyListing
 			System.out.println("Cannot add the keywords to new housing.");
 			return false;
 		}
-		
-		sqlStatement = "SELECT thid FROM temphousing ORDER BY thid DESC LIMIT 1;";
-		result = null;
-		try
+		if(!updatingExisting)
 		{
-			Statement statement3 = statement.getConnection().createStatement();
-
-			result = statement3.executeQuery(sqlStatement);
-			while(result.next())
+			sqlStatement = "SELECT thid FROM temphousing ORDER BY thid DESC LIMIT 1;";
+		
+		
+			result = null;
+			try
 			{
-
-					thid = Integer.parseInt(result.getString(1));
-				
+				Statement statement3 = statement.getConnection().createStatement();
+	
+				result = statement3.executeQuery(sqlStatement);
+				while(result.next())
+				{
+	
+						thid = Integer.parseInt(result.getString(1));
+					
+				}
+	
 			}
-
+			catch(Exception e)
+			{
+				System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+				System.out.println("Cannot add the keywords to new housing.");
+				return false;
+			}
 		}
-		catch(Exception e)
+		else
 		{
-			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
-			System.out.println("Cannot add the keywords to new housing.");
-			return false;
+			thid = existingThid;
 		}
-		
 		sqlStatement = "INSERT INTO haskeywords VALUES(" + thid + ", " + wordsID + ");";
 		try
 		{
@@ -121,6 +128,102 @@ public class PropertyListing
 		{
 			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
 			System.out.println("Cannot add the keywords to new housing.");
+			return false;
+		}
+		
+	}
+	
+	public boolean UpdateTH(int desiredThid, Statement statement)
+	{
+		sqlStatement = "UPDATE temphousing SET neighbors = " + neighbors;
+		if(!category.equals(""))
+		{
+			sqlStatement += ", category = \"" + category + "\"";
+		}
+		if(!description.equals(""))
+		{
+			sqlStatement += ", description = \"" + description + "\"";
+		}
+		if(squareFootage != -1)
+		{
+			sqlStatement += ", squareFootage = " + squareFootage;
+		}
+		if(carLimit != -1)
+		{
+			sqlStatement += ", carLimit = " + carLimit;
+		}
+		if(!city.equals(""))
+		{
+			sqlStatement += ", city = \"" + city + "\"";
+		}
+		if(!state.equals(""))
+		{
+			sqlStatement += ", state = \"" + state + "\"";
+		}
+		sqlStatement += " WHERE login = \"" + login +"\" AND thid = " + desiredThid + ";";
+		
+		int rowsAffected = 0;
+		try
+		{
+			rowsAffected = statement.executeUpdate(sqlStatement);
+			return true;
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			return false;
+		}
+
+	}
+	
+	public boolean UpdateTHKeywords(int desiredThid, String keywords, String language, Statement statement)
+	{
+		if(keywords.equals("") && language.equals(""))
+		{
+			return true;
+		}
+		sqlStatement = "SELECT wordsID FROM haskeywords WHERE thid = " + desiredThid + ";";
+		ResultSet result = null;
+		int wordsID = 0;
+		try
+		{
+			Statement statement2 = statement.getConnection().createStatement();
+			result = statement.executeQuery(sqlStatement);
+			while(result.next())
+			{
+				wordsID = result.getInt(1);
+			}
+			if(wordsID == 0)
+			{
+				return AddKeywords(keywords, language, statement2, true, desiredThid);
+			}
+			
+			sqlStatement = "UPDATE keywords SET ";
+			if(!keywords.equals("") && !language.equals(""))
+			{
+				sqlStatement += "words = \"" + keywords + "\", languageIn = \"" + language + "\"";
+				
+			}
+			else
+			{
+				if(!keywords.equals(""))
+				{
+					sqlStatement += "words = \"" + keywords + "\"";
+				}
+				else if(!language.equals(""))
+				{
+					sqlStatement += "languageIn = \"" + language + "\"";
+				}
+			}
+			sqlStatement += " WHERE wordsID = " + wordsID + ";";
+			
+			statement2.executeUpdate(sqlStatement);
+			
+			return true;
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
 			return false;
 		}
 		
