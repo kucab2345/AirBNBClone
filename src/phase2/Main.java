@@ -53,7 +53,7 @@ public class Main {
     	 System.out.println("5. Leave Feedback, Feedback Ratings, and User Trust Rating");
     	 System.out.println("6. Browse Property");
     	 System.out.println("7. Statistics");
-    	 System.out.println("8. Admin Tools");
+    	 System.out.println("8. User Award Admin Tools");
     	 System.out.println("9. Exit");
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
