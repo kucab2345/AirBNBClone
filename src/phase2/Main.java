@@ -54,7 +54,7 @@ public class Main {
     	 System.out.println("6. Browse Property");
     	 System.out.println("7. Statistics");
     	 System.out.println("8. Degrees of Separation");
-    	 System.out.println("9. Admin Tools");
+    	 System.out.println("9. User Award Admin Tools");
     	 System.out.println("10. Exit");
 		 System.out.println("To pick your option type in the number associated with that option.");
     	 System.out.print("Enter the number here: ");
@@ -1336,7 +1336,25 @@ public class Main {
 						}
 						else if(adminCount == 1)
 						{
-							
+							String stringLimit = "";
+							int limit = 0;
+							System.out.print("How many users would you like returned: ");
+							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+							try 
+							{
+								limit = Integer.parseInt(stringLimit);
+								AdminTools adminTools = new AdminTools();
+								System.out.println("Here is a list of the " + stringLimit + " most useful users!");
+								if(!adminTools.displayMostTrustedUsers(limit, connection.stmt))
+								{
+									System.out.println("Error retrieving highest rated users.");
+								}
+							} 
+							catch (Exception e) 
+							{
+								System.err.println("Error parsing option to int.");
+								continue;
+							}
 						}
 						else if(adminCount == 2)
 						{
