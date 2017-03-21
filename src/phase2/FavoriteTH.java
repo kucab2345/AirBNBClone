@@ -11,7 +11,7 @@ public class FavoriteTH
 	
 	public boolean showAllVisitedTH(String login, Statement statement)
 	{
-		sqlStatement = "SELECT * FROM visit WHERE (login = \"" + login + "\");";
+		sqlStatement = "SELECT DISTINCT v.thid FROM visit v, favorites f WHERE v.login = \"" + login + "\" AND v.login = f.login AND v.thid != All(SELECT thid FROM favorites WHERE login = v.login);";
 		try 
 		{
 			result = statement.executeQuery(sqlStatement);

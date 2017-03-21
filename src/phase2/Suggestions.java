@@ -20,7 +20,7 @@ public class Suggestions
 	public HashSet<Integer> MakeSuggestions(Statement statement)
 	{
 		result = new HashSet<Integer>();
-		sqlStatement = "SELECT DISTINCT(t.thid), t.category, t.description, t.squareFootage, t.carLimit, t.neighbors, t.city, t.state FROM temphousing t, reserve r WHERE t.thid != " + referencedThid + " AND r.login = ANY(SELECT login FROM reserve WHERE thid = " + referencedThid+ ") AND r.thid = t.thid ORDER BY (SELECT COUNT(periodID) FROM visit WHERE thid = t.thid) DESC;";
+		sqlStatement = "SELECT DISTINCT(t.thid), t.category, t.description, t.squareFootage, t.carLimit, t.neighbors, t.city, t.state FROM temphousing t, visit v WHERE t.thid != " + referencedThid + " AND v.login = ANY(SELECT login FROM visit WHERE thid = " + referencedThid + ") AND v.thid = t.thid ORDER BY (SELECT COUNT(periodID) FROM visit WHERE thid = t.thid) DESC;";
 		ResultSet output = null;
 		try
 		{

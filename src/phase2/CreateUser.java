@@ -46,7 +46,7 @@ public class CreateUser
 		gender = gend;
 	}
 	
-	public void AddUserToDatabase(Statement stmt) 
+	public void AddUserToDatabase(Statement statement) 
 	{
 		sqlStatement = "INSERT INTO users VALUES(\"" + userLogin + "\",\"" + userName + "\"," + userType + ",\""
 				+ gender + "\"," + userAge + ",\"" + description + "\",\"" + userPassword + "\");";
@@ -55,9 +55,9 @@ public class CreateUser
 		System.out.println("Executing " + sqlStatement);
 		try 
 		{
-			result = stmt.executeUpdate(sqlStatement);
-			stmt.close();
-		} catch (Exception e) 
+			result = statement.executeUpdate(sqlStatement);
+		} 
+		catch (Exception e) 
 		{
 			System.err.println(e.getMessage() + e.getStackTrace());
 			System.out.println("Cannot execute the query.");

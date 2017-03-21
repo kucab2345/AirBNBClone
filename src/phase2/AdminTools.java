@@ -31,6 +31,7 @@ public class AdminTools
 		{
 			return false;
 		}
+		
 	}
 	public boolean displayMostUsefulUsers(int limit, Statement statement)
 	{
@@ -53,6 +54,34 @@ public class AdminTools
 		}
 		catch(Exception e)
 		{
+			return false;
+		}
+	}
+	
+	public boolean checkIfAdmin(String login, Statement statement)
+	{
+		sqlStatement = "SELECT u.userType FROM users u WHERE u.login = \"" + login + "\";";
+		ResultSet result = null;
+		try
+		{
+			result = statement.executeQuery(sqlStatement);
+			while(result.next())
+			{
+				if(result.getBoolean(1))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			System.err.println("No user found with this login.");
+			return false;
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" + e.getStackTrace());
 			return false;
 		}
 	}

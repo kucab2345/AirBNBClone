@@ -109,7 +109,7 @@ public class StatPopularTH
 		String previousCategory = "";
 		int categoryCount = 0;
 		
-		sqlStatement = "Select f.thid, t.category, AVG(f.starRating) as AverageRating from feedback f, temphousing t where (f.thid = t.thid and t.category = ANY(select category from temphousing)) group by f.thid order by AVG(f.starRating) DESC;";
+		sqlStatement = "Select f.thid, t.category, AVG(f.starRating) as AverageRating from feedback f, temphousing t where (f.thid = t.thid and t.category = ANY(select category from temphousing)) group by f.thid order by t.category, AVG(f.starRating) DESC;";
 		try 
 		{
 			result = stmt.executeQuery(sqlStatement);

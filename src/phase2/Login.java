@@ -5,17 +5,16 @@ import java.sql.Statement;
 
 public class Login 
 {
-	public boolean LoginToServer(String inLogin, String inPassword, Statement stmt)
+	public boolean LoginToServer(String inLogin, String inPassword, Statement statement)
 	{
-		String sql = "select * from users where login = \"" + inLogin + "\" and userPassword = \"" + inPassword + "\";";
+		String sql = "SELECT * FROM users WHERE login = \"" + inLogin + "\" AND userPassword = \"" + inPassword + "\";";
 
 		boolean output = false;
 		ResultSet rs = null;
-		System.out.println("Executing " + sql);
 		int counter = 0;
 		try 
 		{
-			rs = stmt.executeQuery(sql);
+			rs = statement.executeQuery(sql);
 			while (rs.next()) 
 			{
 				counter++;

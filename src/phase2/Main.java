@@ -15,8 +15,9 @@ public class Main {
 	
 	private static String login = "";
 	private static String password = "";
+	private static boolean isAdmin = false;
 	
-	public static void displayMenu()
+ 	public static void displayMenu()
 	{
 		 System.out.println("Welcome to the Uotel AirBNB");
     	 System.out.println("1. Login");
@@ -88,12 +89,12 @@ public class Main {
 		 System.out.print("Enter your type of account (Type 0 for normal user, 1 for admin, press ENTER to skip):");
 		 userType = input.readLine();
 		 
-		 if(userType == "1")
+		 if(userType.equals("1"))
 		 {
 			 type = true;
 		 }
 		 
-		 if(login == "" || password == "" || name == "" || age == "")
+		 if(login.equals("") || password.equals("") || name.equals("") || age.equals(""))
 		 {
 			 System.out.println("You must complete all fields.");
 		 }
@@ -103,11 +104,11 @@ public class Main {
 			 
 			 //TODO
 			 //Setting as nulls does not seem to actually set the fields in the table to NULL. Look into this. Scrub
-			 if(description == "")
+			 if(description.equals(""))
 			 {
 				 description = null;
 			 }
-			 if(gender == "")
+			 if(gender.equals(""))
 			 {
 				 gender = null;
 			 }
@@ -122,11 +123,11 @@ public class Main {
 	
 	public static boolean LoginChoice(BufferedReader input, Connector connection)throws IOException
 	{
-		
-		
+		AdminTools adminStatus = new AdminTools();
 		Login loginObj = new Login();
 		 System.out.println("Enter your user name login:");
 		 while ((login = input.readLine()) == null && login.length() == 0);
+		 isAdmin = adminStatus.checkIfAdmin(login, connection.stmt);
 		 System.out.println("Enter your password:");
 		 while ((password = input.readLine()) == null && password.length() == 0);
 		 
@@ -250,195 +251,25 @@ public class Main {
 					}
 					else if (count == 7)//Statistics
 					{
-						String statChoice = "";
-						int statCount = -1;
-						int limit;
-						String stringLimit = "";
-						
-						displayStatsMenu();
-						while ((statChoice = input.readLine()) == null && statChoice.length() == 0);
-						try 
-						{
-							statCount = Integer.parseInt(statChoice);
-						} 
-						catch (Exception e) 
-						{
-							System.err.println("Error parsing option to int.");
-							continue;
-						}
-						if (statCount < 1 | statCount > 4)
-						{
-							System.out.println("Your option " + statCount + " was not a valid number.");
-							continue;
-						}
-						else if (statCount == 1)
-						{
-							System.out.print("How many results per category would you like at most: ");
-							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
-							try
-							{
-								limit = Integer.parseInt(stringLimit);
-								StatPopularTH highestRatedTH = new StatPopularTH();
-								System.out.println("Here is a list of the most popular temporary housings!");
-								if(!highestRatedTH.displayMostPopularTH(limit, connection.stmt))
-								{
-									System.out.println("Error retrieving most expensive temporary housings.");
-								}
-							}
-							catch(Exception e)
-							{
-								System.err.println("Error parsing option to int.");
-								continue;
-							}
-						}
-						else if (statCount == 2)
-						{
-							System.out.print("How many results per category would you like at most: ");
-							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
-							try
-							{
-								limit = Integer.parseInt(stringLimit);
-								StatPopularTH highestRatedTH = new StatPopularTH();
-								System.out.println("Here is a list of the most expensive temporary housings on average!");
-								if(!highestRatedTH.displayMostExpensiveTH(limit, connection.stmt))
-								{
-									System.out.println("Error retrieving most expensive temporary housings.");
-								}
-							}
-							catch(Exception e)
-							{
-								System.err.println("Error parsing option to int.");
-								continue;
-							}
-							
-						}
-						else if (statCount == 3)
-						{
-							System.out.print("How many ratings per category would you like at most: ");
-							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
-							try 
-							{
-								limit = Integer.parseInt(stringLimit);
-								StatPopularTH highestRatedTH = new StatPopularTH();
-								System.out.println("Here is a list of the highest average rated temporary housings per category (where feedback exists)!");
-								if(!highestRatedTH.displayHighestRatedTH(limit, connection.stmt))
-								{
-									System.out.println("Error retrieving highest rated temporary housings.");
-								}
-							} 
-							catch (Exception e) 
-							{
-								System.err.println("Error parsing option to int.");
-								continue;
-							}
-						}
+						GetStatistics(input, connection);
 					}
 					else if(count == 8)
 					{
-						System.out.println("Enter two usernames to find their degree of separation by temporary housing favorited.\nThe returned value will be either 1, 2, or -1 meaning they are either greater than 2 degrees separated\nor not connected at all.");
-						DegreesOfSeparation degrees = new DegreesOfSeparation();
-						HashSet<String> allUsers = degrees.GetAllUsers(connection.stmt);//print all user logins
-						String user1;
-						String user2;
-						do
-						{
-							System.out.print("Enter the first user's username: ");
-							user1 = input.readLine();
-							if(!allUsers.contains(user1))
-							{
-								System.out.println("That user doesn't exist!");
-							}
-						}while(!allUsers.contains(user1));
-						
-						do
-						{
-							System.out.print("Enter the second user's username: ");
-							user2 = input.readLine();
-							if(!allUsers.contains(user2))
-							{
-								System.out.println("That user doesn't exist!");
-							}
-						}while(!allUsers.contains(user2));
-						int degree = degrees.discoverDegreeOfSeparation(user1, user2, connection.stmt);
-						if(degree < 0)
-						{
-							System.out.println("User " + user1 + " and user " + user2 + " are either more than 2 degrees apart or are not connected at all.");
-						}
-						else
-						{
-							System.out.println("User " + user1 + " and user " + user2 + " are " + degree + " degree(s) apart!");
-						}
-						
+						GetDegreesOfSeparation(input, connection);			
 					}
 					else if (count == 9)
 					{
-						String adminChoice = "";
-						int adminCount = -1;
-						displayAdminMenu();
-						while ((adminChoice = input.readLine()) == null && adminChoice.length() == 0);
-						try 
+						if(isAdmin)
 						{
-							adminCount = Integer.parseInt(adminChoice);
-						} 
-						catch (Exception e) 
-						{
-							System.err.println("Error parsing option to int.");
-							continue;
+							DoAdminStuff(input, connection);
 						}
-						if (adminCount < 1 | adminCount > 2)
+						else
 						{
-							System.out.println("Your option " + adminCount + " was not a valid number.");
-							continue;
-						}
-						else if(adminCount == 1)
-						{
-							String stringLimit = "";
-							int limit = 0;
-							System.out.print("How many users would you like returned: ");
-							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
-							try 
-							{
-								limit = Integer.parseInt(stringLimit);
-								AdminTools adminTools = new AdminTools();
-								System.out.println("Here is a list of the " + stringLimit + " most trusted users!");
-								if(!adminTools.displayMostTrustedUsers(limit, connection.stmt))
-								{
-									System.out.println("Error retrieving highest rated users.");
-								}
-							} 
-							catch (Exception e) 
-							{
-								System.err.println("Error parsing option to int.");
-								continue;
-							}
-						}
-						else if(adminCount == 2)
-						{
-							String stringLimit = "";
-							int limit = 0;
-							System.out.print("How many useful users would you like returned: ");
-							while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
-							try 
-							{
-								limit = Integer.parseInt(stringLimit);
-								AdminTools adminTools = new AdminTools();
-								System.out.println("Here is a list of the " + stringLimit + " most useful users!");
-								if(!adminTools.displayMostUsefulUsers(limit, connection.stmt))
-								{
-									System.out.println("Error retrieving highest rated users.");
-								}
-							} 
-							catch (Exception e) 
-							{
-								System.err.println("Error parsing option to int.");
-								continue;
-							}
+							System.out.println("Sorry you cannot access admin tools because you are not an admin.");
 						}
 					}
 					else if (count == 10) 
 					{
-						// TODO: Make this return to the previous menu somehow.
-						// Don't be bad
 						loginState = false;
 					}
 				}
@@ -1497,5 +1328,213 @@ public class Main {
 		}
 	}
 	
+	public static void GetStatistics(BufferedReader input, Connector connection)
+	{
+		try
+		{
+			String statChoice = "";
+			int statCount = -1;
+			int limit;
+			String stringLimit = "";
+			
+			displayStatsMenu();
+			while ((statChoice = input.readLine()) == null && statChoice.length() == 0);
+			try 
+			{
+				statCount = Integer.parseInt(statChoice);
+			} 
+			catch (Exception e) 
+			{
+				System.err.println("Error parsing option to int.");
+				return;
+			}
+			if (statCount < 1 | statCount > 4)
+			{
+				System.out.println("Your option " + statCount + " was not a valid number.");
+				return;
+			}
+			else if (statCount == 1)
+			{
+				System.out.print("How many results per category would you like at most: ");
+				while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+				try
+				{
+					limit = Integer.parseInt(stringLimit);
+					StatPopularTH highestRatedTH = new StatPopularTH();
+					System.out.println("Here is a list of the most popular temporary housings!");
+					if(!highestRatedTH.displayMostPopularTH(limit, connection.stmt))
+					{
+						System.out.println("Error retrieving most expensive temporary housings.");
+					}
+				}
+				catch(Exception e)
+				{
+					System.err.println("Error parsing option to int.");
+					return;
+				}
+			}
+			else if (statCount == 2)
+			{
+				System.out.print("How many results per category would you like at most: ");
+				while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+				try
+				{
+					limit = Integer.parseInt(stringLimit);
+					StatPopularTH highestRatedTH = new StatPopularTH();
+					System.out.println("Here is a list of the most expensive temporary housings on average!");
+					if(!highestRatedTH.displayMostExpensiveTH(limit, connection.stmt))
+					{
+						System.out.println("Error retrieving most expensive temporary housings.");
+					}
+				}
+				catch(Exception e)
+				{
+					System.err.println("Error parsing option to int.");
+					return;
+				}
+				
+			}
+			else if (statCount == 3)
+			{
+				System.out.print("How many ratings per category would you like at most: ");
+				while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+				try 
+				{
+					limit = Integer.parseInt(stringLimit);
+					StatPopularTH highestRatedTH = new StatPopularTH();
+					System.out.println("Here is a list of the highest average rated temporary housings per category (where feedback exists)!");
+					if(!highestRatedTH.displayHighestRatedTH(limit, connection.stmt))
+					{
+						System.out.println("Error retrieving highest rated temporary housings.");
+					}
+				} 
+				catch (Exception e) 
+				{
+					System.err.println("Error parsing option to int.");
+					return;
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" + e.getStackTrace());
+		}
+	}
 	
+	public static void GetDegreesOfSeparation(BufferedReader input, Connector connection)
+	{
+		try
+		{
+			System.out.println("Enter two usernames to find their degree of separation by temporary housing favorited.\nThe returned value will be either 1, 2, or -1 meaning they are either greater than 2 degrees separated\nor not connected at all.");
+			DegreesOfSeparation degrees = new DegreesOfSeparation();
+			HashSet<String> allUsers = degrees.GetAllUsers(connection.stmt);//print all user logins
+			String user1;
+			String user2;
+			do
+			{
+				System.out.print("Enter the first user's username: ");
+				user1 = input.readLine();
+				if(!allUsers.contains(user1))
+				{
+					System.out.println("That user doesn't exist!");
+				}
+			}while(!allUsers.contains(user1));
+			
+			do
+			{
+				System.out.print("Enter the second user's username: ");
+				user2 = input.readLine();
+				if(!allUsers.contains(user2))
+				{
+					System.out.println("That user doesn't exist!");
+				}
+			}while(!allUsers.contains(user2));
+			int degree = degrees.discoverDegreeOfSeparation(user1, user2, connection.stmt);
+			if(degree < 0)
+			{
+				System.out.println("User " + user1 + " and user " + user2 + " are either more than 2 degrees apart or are not connected at all.");
+			}
+			else
+			{
+				System.out.println("User " + user1 + " and user " + user2 + " are " + degree + " degree(s) apart!");
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" + e.getStackTrace());
+		}
+	}
+	
+	public static void DoAdminStuff(BufferedReader input, Connector connection)
+	{
+		try
+		{
+			String adminChoice = "";
+			int adminCount = -1;
+			displayAdminMenu();
+			while ((adminChoice = input.readLine()) == null && adminChoice.length() == 0);
+			try 
+			{
+				adminCount = Integer.parseInt(adminChoice);
+			} 
+			catch (Exception e) 
+			{
+				System.err.println("Error parsing option to int.");
+				return;
+			}
+			if (adminCount < 1 | adminCount > 2)
+			{
+				System.out.println("Your option " + adminCount + " was not a valid number.");
+				return;
+			}
+			else if(adminCount == 1)
+			{
+				String stringLimit = "";
+				int limit = 0;
+				System.out.print("How many users would you like returned: ");
+				while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+				try 
+				{
+					limit = Integer.parseInt(stringLimit);
+					AdminTools adminTools = new AdminTools();
+					System.out.println("Here is a list of the " + stringLimit + " most trusted users!");
+					if(!adminTools.displayMostTrustedUsers(limit, connection.stmt))
+					{
+						System.out.println("Error retrieving highest rated users.");
+					}
+				} 
+				catch (Exception e) 
+				{
+					System.err.println("Error parsing option to int.");
+					return;
+				}
+			}
+			else if(adminCount == 2)
+			{
+				String stringLimit = "";
+				int limit = 0;
+				System.out.print("How many useful users would you like returned: ");
+				while ((stringLimit = input.readLine()) == null && stringLimit.length() == 0);
+				try 
+				{
+					limit = Integer.parseInt(stringLimit);
+					AdminTools adminTools = new AdminTools();
+					System.out.println("Here is a list of the " + stringLimit + " most useful users!");
+					if(!adminTools.displayMostUsefulUsers(limit, connection.stmt))
+					{
+						System.out.println("Error retrieving highest rated users.");
+					}
+				} 
+				catch (Exception e) 
+				{
+					System.err.println("Error parsing option to int.");
+					return;
+				}
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" + e.getStackTrace());
+		}
+	}
 }

@@ -21,7 +21,7 @@ public class RateUserFeedback
 	
 	public HashSet<Integer> DisplayTempHouseTHIDS(Statement statement)
 	{
-		sqlStatement = "SELECT t.thid FROM temphousing t;";
+		sqlStatement = "SELECT t.thid, COUNT(feedbackID) FROM temphousing t, feedback f WHERE f.thid = t.thid GROUP BY t.thid ORDER BY t.thid;";
 		thids = new HashSet<Integer>();
 		
 		System.out.println("Retreiving housing information...");
@@ -37,8 +37,13 @@ public class RateUserFeedback
 					if(i == 1)
 					{
 						thids.add(Integer.parseInt(output.getString(i)));
+
+						System.out.println("Temporary Housing ID: " + output.getString(i) + " ");
 					}
-					System.out.println("Temporary Housing ID: " + output.getString(i) + " ");
+					else if(i == 2)
+					{
+						System.out.println("with this amount of feedbacks available: " + output.getInt(i));
+					}
 				}
 				System.out.println("===============================================================================================");
 				//System.out.println();
