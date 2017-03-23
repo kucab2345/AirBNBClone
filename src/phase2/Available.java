@@ -1,6 +1,7 @@
 package phase2;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashSet;
 
 public class Available 
 {
@@ -76,6 +77,80 @@ public class Available
 		}
 		catch(Exception e)
 		{
+			return false;
+		}
+	}
+	
+	public HashSet<Integer> THAvailabilityPeriods(int thid, Statement statement)
+	{
+		HashSet<Integer> output = new HashSet<Integer>();
+		ResultSet result = null;
+		sqlStatement = "SELECT a.periodID, p.fromDate, p.toDate FROM available a, period p WHERE a.thid = " + thid + " AND a.periodID = p.periodID;";
+		try
+		{
+			result = statement.executeQuery(sqlStatement);
+			System.out.println("===============================================================================================");
+
+			while(result.next())
+			{
+				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
+				{
+					if(i == 1)
+					{
+						output.add(result.getInt(i));
+						System.out.println("Period ID: " + result.getString(i));
+					}
+					else if(i == 2)
+					{
+						System.out.print("Start Date " + result.getString(i) + " to ");
+					}
+					else if(i == 3)
+					{
+						System.out.println("End Date " + result.getString(i) + ".");
+					}
+					//System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+				}
+				System.out.println("===============================================================================================");
+			}
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Could not obtain period ids.");
+		}
+		
+		return output;
+	}
+	
+	public boolean RemoveDate(int thid, int periodID, Statement statement)
+	{
+		int woah = 0;
+		sqlStatement = "DELETE FROM available WHERE periodID = " + periodID + ";";
+		try
+		{
+			woah = statement.executeUpdate(sqlStatement);
+			
+			if(woah == 0)
+			{
+				return false;
+			}
+			Statement statement2 = statement.getConnection().createStatement();
+			sqlStatement = "DELETE FROM period WHERE periodID = " + periodID + ";";
+			woah = statement2.executeUpdate(sqlStatement);
+			if(woah > 0)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
+		}
+		catch(Exception e)
+		{
+			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
+			System.out.println("Could not remove date.");
 			return false;
 		}
 	}
