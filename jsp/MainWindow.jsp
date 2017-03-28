@@ -1,6 +1,5 @@
-<%@ page language="java" import="cs5530.*" %>
+<%@ page language="java" import="cs5530/src/phase2.*" %>
 <html>
-
 <style>
 <!-- This adds the ability for enters to add newline characters
  body {
@@ -164,6 +163,9 @@ class="close" title="Close Modal">&times;</span>
 var modal = document.getElementById('userLogin');
 function LoginButton()
 {
+	<%
+	Login theUserLogin = new Login();
+	%>
 	modal.style.display='block'
 
 }
