@@ -125,7 +125,7 @@ span.psw {
 <body>
 <font size="8">In order to access our services, you need to login:</font>
 <BR>
-<center><button class="mainMenuButton", onclick="LoginButton()">Login</button> <button class="mainMenuButton">Create New User</button> <button class="mainMenuButton">Exit</button></center>
+<center><button class="mainMenuButton", onclick="LoginButton()">Login</button> <button class="mainMenuButton", onclick="CreateUserButton()">Create New User</button> <button class="mainMenuButton">Exit</button></center>
 <!-- The Modal -->
 <div id="userLogin" class="modal">
   <span onclick="document.getElementById('userLogin').style.display='none'" 
@@ -158,6 +158,11 @@ class="close" title="Close Modal">&times;</span>
 <script LANGUAGE="javascript">
 var modal = document.getElementById('userLogin');
 
+function CreateUserButton()
+{
+	var CreateUserJSPCall = "CreateUser.jsp";
+	window.location.href = CreateUserJSPCall;
+}
 function LoginButton()
 {
 	modal.style.display='block';
