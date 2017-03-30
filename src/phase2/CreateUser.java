@@ -17,11 +17,11 @@ public class CreateUser
 	
 	private String sqlStatement;
 	
-	public CreateUser(String login, String name, int age, String password)
+	public CreateUser(String login, String name, String age, String password)
 	{
 		userLogin = login;
 		userName = name;
-		userAge = age;
+		userAge = Integer.parseInt(age);
 		userPassword = password;
 	}
 	
