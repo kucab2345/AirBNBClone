@@ -31,4 +31,7 @@ public class Connector {
 	public void closeConnection() throws Exception{
 		con.close();
 	}
+	public void closeStatement() throws Exception{
+		stmt.close();
+	}
 }
