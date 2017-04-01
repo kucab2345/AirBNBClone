@@ -66,7 +66,7 @@
 <script LANGUAGE="javascript">
 	function MakeReservations()
 	{
-		
+		window.location.href = "/~5530u47/MakeReservation.jsp";
 	}
 	
 	function MakeListingOrUpdate()
@@ -86,7 +86,7 @@
 	
 	function FeedbackJunk()
 	{
-		
+		window.location.href = "/~5530u47/FeedbackMenu.jsp";
 	}
 	
 	function TheBrowsing()
