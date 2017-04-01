@@ -40,7 +40,7 @@ function MarkFavoriteHousings()
 }
 function RateTempHousings()
 {
-	//window.location.href = "/~5530u47/RateTempHousings.jsp";
+	window.location.href = "/~5530u47/RateTempHousings.jsp";
 }
 function RateUserFeedback()
 {

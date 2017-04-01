@@ -22,7 +22,12 @@ Connector connection = new Connector();
 FavoriteTH favTH = new FavoriteTH();
 
 favTH.showAllVisitedTH(login, connection.stmt, sb);
-out.println(sb);
+String[] lines = sb.toString().split("\n");
+
+for(int i = 0; i < lines.length; i++)
+{
+	out.println(lines[i])%><BR><%;
+}
 %>
 <BR><BR>
 <%
