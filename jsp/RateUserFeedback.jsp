@@ -65,13 +65,12 @@ if(request.getParameter("THIDAttribute") != null)
 	<input type=submit>
 	<%
 }
-	if(request.getParameter("ratingAttribute") != null && request.getParameter("feedbackIDAttribute") != null)
-	{
-		String rating = request.getParameter("ratingAttributeValue");
-		String feedbackID = request.getParameter("feedbackIDValue");
-		rate.RateFeedback(login, rating, feedbackID, connection.stmt);
-		
-	}
+if(request.getParameter("ratingAttribute") != null && request.getParameter("feedbackIDAttribute") != null)
+{
+	String rating = request.getParameter("ratingAttributeValue");
+	String feedbackID = request.getParameter("feedbackIDValue");
+	rate.RateFeedback(login, rating, feedbackID, connection.stmt);
+}
 
 connection.closeStatement();
 connection.closeConnection();

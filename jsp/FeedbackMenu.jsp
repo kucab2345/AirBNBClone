@@ -24,13 +24,14 @@
  }
 </style>
 <head>
+<center>
 <h2>Feedback Menu</h2>
 	<button class= "loginButtons", onclick="MarkFavoriteHousings()">1. Mark Favorite Housings </button><BR>
 	<button class= "loginButtons", onclick="RateTempHousings()">2. Rate Temp Housings</button><BR>
 	<button class= "loginButtons", onclick="RateUserFeedback()">3. Rate another user's feedback on temp housings</button><BR>
 	<button class= "loginButtons", onclick="MarkUserTrusted()">4. Mark another user as trusted</button><BR>
 	<button class= "loginButtons", onclick="FindUsefulFeedback()">5. Find useful feedback on a temp housing</button><BR>
-
+</center>
 </head>
 
 <script LANGUAGE="javascript">
@@ -48,11 +49,11 @@ function RateUserFeedback()
 }
 function MarkUserTrusted()
 {
-	//window.location.href = "/~5530u47/MarkUserTrusted.jsp";
+	window.location.href = "/~5530u47/MarkUserTrusted.jsp";
 }
 function FindUsefulFeedback()
 {
-	//window.location.href = "/~5530u47/FindUsefulFeedback.jsp";
+	window.location.href = "/~5530u47/FindUsefulFeedback.jsp";
 }
 </script>
 </html>

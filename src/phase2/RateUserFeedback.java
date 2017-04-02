@@ -22,6 +22,7 @@ public class RateUserFeedback
 	
 	public HashSet<Integer> DisplayTempHouseTHIDS(Statement statement)
 	{
+		
 		sqlStatement = "SELECT t.thid, COUNT(feedbackID) FROM temphousing t, feedback f WHERE f.thid = t.thid GROUP BY t.thid ORDER BY t.thid;";
 		thids = new HashSet<Integer>();
 		

@@ -138,6 +138,8 @@ public class Main {
 	
 	public static void main(String[] args) 
 	{
+		List<String> test = [];
+		
 		// TODO Auto-generated method stub
 		boolean loginState = false;
 		boolean wantsToQuit = false;

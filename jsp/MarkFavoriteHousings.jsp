@@ -24,6 +24,8 @@ FavoriteTH favTH = new FavoriteTH();
 favTH.showAllVisitedTH(login, connection.stmt, sb);
 String[] lines = sb.toString().split("\n");
 
+out.println("Here are your visited temporary housings that HAVEN'T been favorited: ");%><BR><%
+
 for(int i = 0; i < lines.length; i++)
 {
 	out.println(lines[i]);%><BR><%
