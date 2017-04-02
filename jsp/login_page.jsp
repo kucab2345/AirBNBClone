@@ -39,6 +39,7 @@
 	if(log.LoginToServer(username, password, connection.stmt))
 	{
 	%>
+	<center>
 	<h2>Action Center</h2>
 	<button class= "loginButtons", onclick="MakeReservations()">1. Make New Reservation </button><BR>
 	<button class= "loginButtons", onclick="MakeListingOrUpdate()">2. Make Property Listing Or Update Existing</button><BR>
@@ -49,6 +50,7 @@
 	<button class= "loginButtons", onclick="TheStatistics()">7. Statistics</button><BR>
 	<button class= "loginButtons", onclick="ExitTheProgram()">8. Exit</button><BR>
 	Click on any button to go to the specified action...<BR>
+	</center>
 	<%
 	}
 	else

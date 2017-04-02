@@ -9,7 +9,18 @@
 	 height:10%;
 	 width:25%;
 	 font-size: 24px;
+	 background-color: #CC0A4A;
+	 color: black;
+	 text-align: center;
+	 border-style: solid;
  }
+ 
+  .mainMenuButton:hover,
+  .mainMenuButton:focus {
+    color: black;
+    cursor: pointer;
+	background-color: #990133;
+}
  
 input[type=text], input[type=password] {
     width: 100%;
@@ -126,9 +137,10 @@ session.setAttribute("thePass", "");
 </head>
 <BR>
 <body>
+<center>
 <font size="8">In order to access our services, you need to login:</font>
 <BR>
-<center><button class="mainMenuButton", onclick="LoginButton()">Login</button> <button class="mainMenuButton", onclick="CreateUserButton()">Create New User</button> </center>
+<button class="mainMenuButton", onclick="LoginButton()">Login</button> <button class="mainMenuButton", onclick="CreateUserButton()">Create New User</button> </center>
 <!-- The Modal -->
 <div id="userLogin" class="modal">
   <span onclick="document.getElementById('userLogin').style.display='none'" 
