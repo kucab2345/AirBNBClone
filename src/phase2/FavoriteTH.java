@@ -11,7 +11,7 @@ public class FavoriteTH
 	private ResultSet result = null;
 	private HashSet<String> thids = new HashSet<String>();
 	
-	public boolean showAllVisitedTH(String login, Statement statement)
+	public boolean showAllVisitedTH(String login, Statement statement, StringBuilder sb)
 	{
 		sqlStatement = "SELECT DISTINCT v.thid FROM visit v, favorites f WHERE v.login = \"" + login + "\" AND v.login = f.login AND v.thid != All(SELECT thid FROM favorites WHERE login = v.login);";
 		try 
@@ -22,8 +22,10 @@ public class FavoriteTH
 			{
 				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
 				{
+					
 					System.out.print(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 					thids.add(result.getString(i));
+					sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
 				}
 				System.out.println();
 			}

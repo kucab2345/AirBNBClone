@@ -13,7 +13,7 @@ public class FeedbackTH
 	private ResultSet result; 
 	private HashSet<String> thids = new HashSet<String>();
 	
-	public boolean showAllVisitedTH(String login, Statement statement)
+	public boolean showAllVisitedTH(String login, Statement statement, StringBuilder sb)
 	{
 		sqlStatement = "SELECT * FROM visit WHERE (login = \"" + login + "\");";
 		try 
@@ -25,6 +25,7 @@ public class FeedbackTH
 				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
 				{
 					System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+					sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
 					thids.add(result.getString(i));
 				}
 				System.out.println();
@@ -39,9 +40,9 @@ public class FeedbackTH
 			return false;
 		}
 	}
-	public boolean MarkTHFeedback(String feedbackText, String thid, String login, String feedbackKeyWords, int starRating, Statement statement)
+	public boolean MarkTHFeedback(String feedbackText, String thid, String login, String feedbackKeyWords, String starRatingS, Statement statement)
 	{
-		
+		int starRating = Integer.parseInt(starRatingS);
 		sqlStatement = "INSERT INTO feedback VALUES (DEFAULT, \"" + feedbackText + "\",now(),\"" + thid + "\",\"" + login + "\",\"" + feedbackKeyWords + "\"," + starRating +");";//Now() works but it throws a warning since it is also trying to push in the time of date as well as today's date
 		int rowsAffected = 0;
 		try
