@@ -26,7 +26,7 @@ public class Reserve
 		currentResult = null;
 	}
 	
-	public void AddReservation(int requestedTHID, int periodID, Statement statement)
+	public void AddReservation(int requestedTHID, int periodID, Statement statement, StringBuilder newOutput)
 	{
 		sqlStatement = "SELECT pricePerNight FROM available WHERE thid = " + requestedTHID + " AND periodID = " + periodID + ";";
 		ResultSet result = null;
@@ -80,8 +80,10 @@ public class Reserve
 		try 
 		{
 			resultNum = statement.executeUpdate(sqlStatement);
-			System.out.println("Successfully inserted this reservation.");
-			System.out.println("Your total cost will be: $" + totalCost);
+			newOutput.append("Successfully inserted this reservation.<br/>");
+			newOutput.append("Your total cost will be: $" + totalCost + "<br/>");
+			//System.out.println("Successfully inserted this reservation.");
+			//System.out.println("Your total cost will be: $" + totalCost);
 			//statement.close();
 		} 
 		catch (Exception e) 
@@ -104,13 +106,13 @@ public class Reserve
 
 	}
 	
-	public HashSet<String> DisplayTempHousesAvailable(Statement statement)
+	public HashSet<String> DisplayTempHousesAvailable(Statement statement, StringBuilder newOutput)
 	{
-		return DisplayTempHousesAvailable("", statement, true);
+		return DisplayTempHousesAvailable("", statement, true, newOutput);
 
 	}
 	
-	public HashSet<String> DisplayTempHousesAvailable(String login, Statement statement, boolean all)
+	public HashSet<String> DisplayTempHousesAvailable(String login, Statement statement, boolean all, StringBuilder newOutput)
 	{
 		if(all)
 		{
@@ -123,14 +125,16 @@ public class Reserve
 					+ "FROM temphousing t WHERE t.login = \"" + login + "\";";
 		}
 		
-		System.out.println("Retreiving housing information...");
+		//System.out.println("Retreiving housing information...");
+		newOutput.append("Retreiving housing information...<br/>");
 		ResultSet output = null;
 		HashSet<String> thids = new HashSet<String>();
 		try 
 		{
 			output = statement.executeQuery(sqlStatement);
 			currentResult = output;
-			System.out.println("===============================================================================================");
+			newOutput.append("===============================================================================================<br/>");
+			//System.out.println("===============================================================================================");
 			while(output.next())
 			{
 				for(int i = 1; i <= output.getMetaData().getColumnCount(); i++)
@@ -139,14 +143,17 @@ public class Reserve
 					{
 						thids.add(output.getString(i));
 					}
-					System.out.println(output.getMetaData().getColumnName(i) + ": " + output.getString(i) + " ");
+					//System.out.println(output.getMetaData().getColumnName(i) + ": " + output.getString(i) + " ");
+					newOutput.append(output.getMetaData().getColumnName(i) + ": " + output.getString(i) + " ");
 				}
-				System.out.println("===============================================================================================");
+				//System.out.println("===============================================================================================");
+				newOutput.append("<br/>===============================================================================================<br/>");
 
 			}
 			if(all)
 			{
-				System.out.println("Please select which house you would like to reserve.");
+				//System.out.println("Please select which house you would like to reserve.");
+				newOutput.append("Please select which house you would like to reserve.<br/>");
 			}
 			return thids;
 		}
@@ -159,10 +166,11 @@ public class Reserve
 
 	}
 	
-	public int DisplayAvailableDays(int thid, Statement statement)
+	public int DisplayAvailableDays(int thid, Statement statement, StringBuilder newOutput)
 	{
 		sqlStatement = "SELECT a.periodID, a.pricePerNight, p.fromDate, p.toDate FROM available a, period p WHERE a.periodID = p.periodID AND a.thid = " + thid + ";";
-		System.out.println("Requesting information...");
+		//System.out.println("Requesting information...");
+		newOutput.append("Requesting information...<br/>");
 		ResultSet output = null;
 		int numAvailable = 0;
 		try 
@@ -173,10 +181,12 @@ public class Reserve
 				numAvailable++;
 				for(int i = 1; i <= output.getMetaData().getColumnCount(); i++)
 				{
-					System.out.print(output.getMetaData().getColumnName(i) + ": " + output.getString(i) + " ");
+					//System.out.print(output.getMetaData().getColumnName(i) + ": " + output.getString(i) + " ");
+					newOutput.append(output.getMetaData().getColumnName(i) + ": " + output.getString(i) + " ");
 					
 				}
-				System.out.println();
+				newOutput.append("<br/>");
+				//System.out.println();
 			}
 			
 			return numAvailable;
@@ -189,7 +199,7 @@ public class Reserve
 		}
 	}
 	
-	public HashSet<String> DisplayAllReservationsForUser(String login, Statement statement)
+	public HashSet<String> DisplayAllReservationsForUser(String login, Statement statement, StringBuilder newOuput)
 	{
 		ResultSet result = null;
 		HashSet<String> valid = new HashSet();
@@ -197,8 +207,8 @@ public class Reserve
 		try
 		{
 			result = statement.executeQuery(sqlStatement);
-			System.out.println("===============================================================================================");
-
+			//System.out.println("===============================================================================================");
+			newOuput.append("===============================================================================================<br/>");
 			while(result.next())
 			{
 				String valueToAdd = "";
@@ -212,10 +222,12 @@ public class Reserve
 					{
 						valueToAdd += " " + result.getString(i);
 					}
-					System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+					//System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+					newOuput.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " <br/>");
 				}
 				valid.add(valueToAdd);
-				System.out.println("===============================================================================================");
+				//System.out.println("===============================================================================================");
+				newOuput.append("===============================================================================================<br/>");
 
 			}
 			return valid;

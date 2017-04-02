@@ -25,6 +25,7 @@
 </style>
 <head>
 	<%
+	session = request.getSession();
 	String username = request.getParameter("user");
 	session.setAttribute("theUser", username);
 	String password = request.getParameter("userpassword");
@@ -101,6 +102,9 @@
 	
 	function ExitTheProgram()
 	{
+		window.location.href = "/~5530u47/MainWindow.jsp";
+		sessionScope.put("theUser", "");
+		sessionScope.put("thePass", "");
 		
 	}
 </script>
