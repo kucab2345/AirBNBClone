@@ -44,7 +44,7 @@ function RateTempHousings()
 }
 function RateUserFeedback()
 {
-	//window.location.href = "/~5530u47/RateUserFeedback.jsp";
+	window.location.href = "/~5530u47/RateUserFeedback.jsp";
 }
 function MarkUserTrusted()
 {

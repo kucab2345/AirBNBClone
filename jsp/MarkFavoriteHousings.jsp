@@ -26,7 +26,7 @@ String[] lines = sb.toString().split("\n");
 
 for(int i = 0; i < lines.length; i++)
 {
-	out.println(lines[i])%><BR><%;
+	out.println(lines[i]);%><BR><%
 }
 %>
 <BR><BR>
