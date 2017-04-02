@@ -117,15 +117,18 @@ span.psw {
 }
 </style>
 <head>
-
-
+<%
+session = request.getSession();
+session.setAttribute("theUser", "");
+session.setAttribute("thePass", "");
+%>
 <center>| <h1>- Welcome to the Uotel AirBNB! -</h1> |</center>
 </head>
 <BR>
 <body>
 <font size="8">In order to access our services, you need to login:</font>
 <BR>
-<center><button class="mainMenuButton", onclick="LoginButton()">Login</button> <button class="mainMenuButton", onclick="CreateUserButton()">Create New User</button> <button class="mainMenuButton">Exit</button></center>
+<center><button class="mainMenuButton", onclick="LoginButton()">Login</button> <button class="mainMenuButton", onclick="CreateUserButton()">Create New User</button> </center>
 <!-- The Modal -->
 <div id="userLogin" class="modal">
   <span onclick="document.getElementById('userLogin').style.display='none'" 
