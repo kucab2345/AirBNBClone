@@ -24,6 +24,13 @@
  }
 </style>
 <head>
+<%
+
+session = request.getSession();
+String login = session.getAttribute("theUser").toString();
+String password = session.getAttribute("thePass").toString();
+
+%>
 <center>
 <h2>Feedback Menu</h2>
 	<button class= "loginButtons", onclick="MarkFavoriteHousings()">1. Mark Favorite Housings </button><BR>
@@ -31,6 +38,7 @@
 	<button class= "loginButtons", onclick="RateUserFeedback()">3. Rate another user's feedback on temp housings</button><BR>
 	<button class= "loginButtons", onclick="MarkUserTrusted()">4. Mark another user as trusted</button><BR>
 	<button class= "loginButtons", onclick="FindUsefulFeedback()">5. Find useful feedback on a temp housing</button><BR>
+	<button class= "loginButtons", onclick="location.href = '/~5530u47/login_page.jsp?user=<%=login%>&userpassword=<%=password%>';">6. Main Menu</button><BR>
 </center>
 </head>
 
