@@ -17,7 +17,7 @@ public class PropertyListing
 	private String login;
 	private String sqlStatement;
 	
-	PropertyListing(String inLogin, String inCategory, String inDescription, double inSquareFootage, int inCarLimit, boolean inNeighbors, String inCity, String inState)
+	public PropertyListing(String inLogin, String inCategory, String inDescription, double inSquareFootage, int inCarLimit, boolean inNeighbors, String inCity, String inState)
 	{
 		category = inCategory;
 		description = inDescription;//optional

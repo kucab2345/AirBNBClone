@@ -1,6 +1,11 @@
 <%@ page language="java" import="cs5530.*" %>
 <%@ page import="java.util.*" %>
 <html>
+<style>
+h2{
+	color:red
+}
+</style>
 <head>
 <script LANGUAGE="javascript">
 function check_all_fields(form_obj){
@@ -22,7 +27,7 @@ Login log = new Login();
 	if(!log.LoginToServer(login, password, connection.stmt))
 	{
 %>
-<h1>Invalid Login</h1><BR>
+<h2>Invalid Login</h2><BR>
 	<form action="/~5530u47/MainWindow.jsp" method="POST">
 		<button type="submit", class="retryButton">Go Back</button>
 	</form>
@@ -81,8 +86,43 @@ Login log = new Login();
 	}
 	else
 	{
-		
-	%>
+		String housingCategory = request.getParameter("housingCategoryAttributeValue");
+		String housingDescription = request.getParameter("housingDescriptionAttributeValue");
+		String housingKeywords = request.getParameter("housingKeywordsAttributeValue");
+		String housingLanguage = request.getParameter("housingKeywordsLanguageAttributeValue");
+		String housingSquareFootage = request.getParameter("housingSquareFeetAttributeValue");
+		String housingCarLimit = request.getParameter("housingCarLimitAttributeValue");
+		String housingCity = request.getParameter("housingCityAttributeValue");
+		String housingState = request.getParameter("housingStateAttributeValue");
+		boolean housingNeighborsBool = false;
+
+	if(request.getParameter("theNeighborType").equals("true"))
+	{
+		housingNeighborsBool = true;
+	}
+	Integer housingCarLimitInt = Integer.valueOf(housingCarLimit);
+	Double housingSquareFootageDouble = Double.valueOf(housingSquareFootage);
 	
+	PropertyListing listing = new PropertyListing(login,housingCategory,housingDescription,housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool, housingCity, housingState);
+
+	//Property added to tempHousing here					
+	if(!listing.AddListing(connection.stmt))
+	{%>
+		<h2>Failed to add listing to the database!</h2><%
+	}
+
+	if(!listing.AddKeywords(housingKeywords, housingLanguage, connection.stmt, false, -1))
+	{%>
+		<h2>Failed to add keywords of the listing to the database!</h2><%
+	}
+	
+	connection.closeStatement();
+	connection.closeConnection();
+	%>
+	<h1>Proceed to adding availability dates to your new housing.</h1><BR>
+	<button type="button" onclick="proceedToAvailability()" id="proceedButton">Go to Availabilities</button>
+	<%
+	}
+	%>
 </body>
 </html>
