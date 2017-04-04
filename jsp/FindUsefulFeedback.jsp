@@ -48,7 +48,7 @@ else
 		out.println(feedback[i]);%><BR><%
 	}
 	%>
-	<button type="button" onclick="location.href = '/~5530u47/FeedbackMenu.jsp';" id="returnButton">Return</button><%
+	<button type="button" onclick="location.href = '/~5530u47/login_page.jsp?user=<%=login%>&userpassword=<%=password%>';" id="returnButton">Return</button><%
 }
 %>
 </body>
