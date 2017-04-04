@@ -49,7 +49,7 @@ else
 } 
 String thidAttribute = request.getParameter("thidAttribute");
 String pidAttribute = request.getParameter("pidAttribute");
-String answer = "no";
+
 if( thidAttribute == null){		
 	if(pidAttribute != null)
 	{

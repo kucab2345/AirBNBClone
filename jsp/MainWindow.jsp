@@ -130,8 +130,8 @@ span.psw {
 <head>
 <%
 session = request.getSession();
-session.setAttribute("theUser", "");
-session.setAttribute("thePass", "");
+session.setAttribute("theUser", null);
+session.setAttribute("thePass", null);
 %>
 <center>| <h1>- Welcome to the Uotel AirBNB! -</h1> |</center>
 </head>

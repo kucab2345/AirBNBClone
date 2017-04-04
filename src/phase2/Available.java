@@ -83,7 +83,7 @@ public class Available
 		}
 	}
 	
-	public HashSet<Integer> THAvailabilityPeriods(int thid, Statement statement)
+	public HashSet<Integer> THAvailabilityPeriods(int thid, Statement statement, StringBuilder newOutput)
 	{
 		HashSet<Integer> output = new HashSet<Integer>();
 		ResultSet result = null;
@@ -91,8 +91,8 @@ public class Available
 		try
 		{
 			result = statement.executeQuery(sqlStatement);
-			System.out.println("===============================================================================================");
-
+			//System.out.println("===============================================================================================");
+			newOutput.append("<br/>===============================================================================================<br/>");
 			while(result.next())
 			{
 				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
@@ -100,19 +100,23 @@ public class Available
 					if(i == 1)
 					{
 						output.add(result.getInt(i));
-						System.out.println("Period ID: " + result.getString(i));
+						//System.out.println("Period ID: " + result.getString(i));
+						newOutput.append("Period ID: " + result.getString(i)+"<br/>");
 					}
 					else if(i == 2)
 					{
-						System.out.print("Start Date " + result.getString(i) + " to ");
+						//System.out.print("Start Date " + result.getString(i) + " to ");
+						newOutput.append("Start Date " + result.getString(i)+ " to ");
 					}
 					else if(i == 3)
 					{
-						System.out.println("End Date " + result.getString(i) + ".");
+						//System.out.println("End Date " + result.getString(i) + ".");
+						newOutput.append("End Date " + result.getString(i) + ".<br/>");
 					}
 					//System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 				}
-				System.out.println("===============================================================================================");
+				//System.out.println("===============================================================================================");
+				newOutput.append("===============================================================================================<br/>");
 			}
 		}
 		catch(Exception e)

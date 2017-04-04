@@ -44,8 +44,8 @@ if(thid == null)
 {
 	out.println(output.toString());
 	%>
-	Enter the temporary housing ID number associated with the place you would like to add more dates:<BR>
-	<form name="addDatesToHouse" method=get onsubmit="return check_all_fieldsTHID(this)" action="AddAvailabilityDates.jsp">
+	Enter the temporary housing ID number associated with the place you would like to remove availability dates:<BR>
+	<form name="removeDatesFromHouses" method=get onsubmit="return check_all_fieldsTHID(this)" action="RemoveAvailabilityDates.jsp">
 	<input type=number name="thid" min=0 max=2147483647> <BR>
 	<input type=submit>
 	</form>
@@ -54,10 +54,8 @@ if(thid == null)
 else
 {
 	Integer thidInt = Integer.valueOf(thid);
-	String fromDate = request.getParameter("fromDate");
-	String toDate = request.getParameter("toDate");
-	String costPerNight = request.getParameter("costPerNight");
-	
+	Available avail = new Available();
+	avail.THAvailabilityPeriods(thidToRemove, connection.stmt, output);
 	if(fromDate == null || toDate == null || costPerNight == null)
 	{
 		%>
