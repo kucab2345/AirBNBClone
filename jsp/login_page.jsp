@@ -74,7 +74,7 @@
 	
 	function MakeListingOrUpdate()
 	{
-		
+		window.location.href = "/~5530u47/MakeHouseListOrUpdate.jsp";
 	}
 	
 	function AddDates()
