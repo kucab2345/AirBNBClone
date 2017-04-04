@@ -15,6 +15,7 @@ function check_all_fields(form_obj){
 	}
 	return true;
 }
+
 </script>
 </head>
 <body>
@@ -104,7 +105,6 @@ Login log = new Login();
 	Double housingSquareFootageDouble = Double.valueOf(housingSquareFootage);
 	
 	PropertyListing listing = new PropertyListing(login,housingCategory,housingDescription,housingSquareFootageDouble,housingCarLimitInt,housingNeighborsBool, housingCity, housingState);
-
 	//Property added to tempHousing here					
 	if(!listing.AddListing(connection.stmt))
 	{%>
@@ -115,12 +115,24 @@ Login log = new Login();
 	{%>
 		<h2>Failed to add keywords of the listing to the database!</h2><%
 	}
-	
+	StringBuilder output = new StringBuilder();
+	Reserve reservation = new Reserve(login, password);
+	HashSet<String> houses = reservation.DisplayTempHousesAvailable(login, connection.stmt, false,output);
+	List<String> housesList = new ArrayList<>(houses);
+	Integer tempBig = 0;
+	for(int i = 0; i < housesList.size(); i++)
+	{
+		Integer houseID = Integer.valueOf(housesList.get(i));
+		if(houseID > tempBig)
+		{
+			tempBig = houseID;
+		}
+	}
 	connection.closeStatement();
 	connection.closeConnection();
 	%>
 	<h1>Proceed to adding availability dates to your new housing.</h1><BR>
-	<button type="button" onclick="proceedToAvailability()" id="proceedButton">Go to Availabilities</button>
+	<button type="button" onclick="location.href = '/~5530u47/AddAvailabilityDates.jsp?thid=<%=tempBig%>';" id="proceedButton">Go to Availabilities</button>
 	<%
 	}
 	%>
