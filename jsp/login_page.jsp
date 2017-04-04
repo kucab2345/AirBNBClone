@@ -99,7 +99,7 @@
 	
 	function TheStatistics()
 	{
-		
+		window.location.href = "/~/5530u47/Statistics.jsp";
 	}
 	
 	function ExitTheProgram()
