@@ -4,7 +4,7 @@
 <head>
 <script LANGUAGE="javascript">
 function check_all_fields(form_obj){
-	if( form_obj.usernameAttributeValue.value == "" || form_obj.passwordAttributeValue.value == "" || form_obj.nameAttributeValue.value == "" || form_obj.ageAttributeValue.value == ""){
+	if( form_obj.housingCategoryAttributeValue.value == "" || form_obj.housingCityAttributeValue.value == "" || form_obj.housingStateAttributeValue.value == ""){
 		alert("One of your property's information box wasn't filled in when it should have been.");
 		return false;
 	}
@@ -73,12 +73,15 @@ Login log = new Login();
 		<BR>
 	Housing State Location (max 30 characters): <BR>
 	<input type=hidden name="housingStateAttribute" value="state">
-		<input type=text name="usernameAttributeValue" length=30>
+		<input type=text name="housingStateAttributeValue" length=30>
 		<BR>
 		<input type=submit>
 		</form>
 	<%
 	}
+	else
+	{
+		
 	%>
 	
 </body>
