@@ -56,7 +56,7 @@ else
 	Integer thidInt = Integer.valueOf(thid);
 	String periodID = request.getParameter("periodID");
 	Available avail = new Available();
-	avail.THAvailabilityPeriods(thidToRemove, connection.stmt, output);
+	avail.THAvailabilityPeriods(thidInt, connection.stmt, output);
 	if(periodID == null)
 	{
 		out.println(output.toString());
@@ -76,7 +76,7 @@ else
 		if(avail.RemoveDate(thidInt, periodIDInt, connection.stmt))
 		{
 			%>
-			Successfully removed dates from Temporary House ID: <%=thidToRemove%>. <BR>
+			Successfully removed dates from Temporary House ID: <%=thidInt%>. <BR>
 			<%
 		}
 		else

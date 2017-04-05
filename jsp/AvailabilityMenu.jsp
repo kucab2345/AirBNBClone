@@ -2,7 +2,7 @@
 <%@ page import="java.util.*" %>
 <html>
 <style>
- .ListOrUpdateButton{
+ .AddOrRemoveButtons{
 	 height:5%;
 	 width:30%;
 	 font-size: 18px;
@@ -11,8 +11,8 @@
 	 text-align: center;
  }
  
-  .ListOrUpdateButton:hover,
-  .ListOrUpdateButton:focus {
+  .AddOrRemoveButtons:hover,
+  .AddOrRemoveButtons:focus {
     color: black;
     cursor: pointer;
 	background-color: #FFFFFF;
@@ -49,10 +49,10 @@ Login log = new Login();
 	{
 %>
 <center>
-	<h2>Make Property Listing Or Update Existing</h2>
-	<button class= "ListOrUpdateButton", onclick="AddMoreDates()">1. Create New Property Listing </button><BR>
-	<button class= "ListOrUpdateButton", onclick="RemoveDates()">2. Update Housing</button><BR>
-	<button class= "ListOrUpdateButton", onclick="location.href = '/~5530u47/login_page.jsp?user=<%=login%>&userpassword=<%=password%>';">3. Main Menu</button><BR>
+	<h2>Add or Remove Dates of Availability</h2>
+	<button class= "AddOrRemoveButtons", onclick="AddMoreDates()">1. Add Availability Dates</button><BR>
+	<button class= "AddOrRemoveButtons", onclick="RemoveDates()">2. Remove Availability Dates</button><BR>
+	<button class= "AddOrRemoveButtons", onclick="location.href = '/~5530u47/login_page.jsp?user=<%=login%>&userpassword=<%=password%>';">3. Main Menu</button><BR>
 	</center>
 	<%
 	}

@@ -7,7 +7,7 @@ public class Period
 {	
 	private String sqlStatement; 
 
-	boolean AddPeriod(String inFromDate, String inToDate, Statement stmt)
+	public boolean AddPeriod(String inFromDate, String inToDate, Statement stmt)
 	{
 		sqlStatement = "INSERT INTO period VALUES(DEFAULT,\"" + inFromDate + "\",\"" + inToDate + "\");";
 		int rowsAffected = 0;
