@@ -11,7 +11,7 @@ function check_all_fieldsTHID(form_obj){
 	return true;
 }
 function check_all_fieldsDates(form_obj){
-	if( form_obj.fromDate.value == "" || form_obj.toDate.value == "" || form_obj.costPerNight.value == ""){
+	if( form_obj.fromDate.value == ""){
 		alert("All of the fields associated with the dates must be inputted.");
 		return false;
 	}
@@ -46,7 +46,7 @@ if(thid == null)
 	%>
 	Enter the temporary housing ID number associated with the place you would like to remove availability dates:<BR>
 	<form name="removeDatesFromHouses" method=get onsubmit="return check_all_fieldsTHID(this)" action="RemoveAvailabilityDates.jsp">
-	<input type=number name="thid" min=0 max=2147483647> <BR>
+	<input type=number name="thid" min=123 max=2147483647> <BR>
 	<input type=submit>
 	</form>
 	<%
@@ -54,56 +54,42 @@ if(thid == null)
 else
 {
 	Integer thidInt = Integer.valueOf(thid);
+	String periodID = request.getParameter("periodID");
 	Available avail = new Available();
 	avail.THAvailabilityPeriods(thidToRemove, connection.stmt, output);
-	if(fromDate == null || toDate == null || costPerNight == null)
+	if(periodID == null)
 	{
+		out.println(output.toString());
 		%>
-		Please enter the starting date of availability:<BR>
-		<form name="dateStuff" method=get onsubmit="return check_all_fieldsDates(this)" action="AddAvailabilityDates.jsp">
+		Please enter the period ID associated to the date you want to remove:<BR>
+		<form name="dateStuffRemove" method=get onsubmit="return check_all_fieldsDates(this)" action="RemoveAvailabilityDates.jsp">
 		<input type=hidden name="thid" value="<%=thid%>"> 
-		<input type=date name="fromDate"><BR>
-		Please enter the ending date of availability:<BR>
-		<input type=date name="toDate"><BR>
-		Please enter the cost per night during these dates:<BR>
-		<input type=number name="costPerNight" min=0 step="0.01"><BR>
+		<input type=number name="periodID" min=1><BR>
 		<input type=submit>
 		</form>
 		<%
 	}
 	else
 	{
-		Float costPerNightFloat = Float.valueOf(costPerNight);
-		Period period = new Period();
-		if(!period.AddPeriod(fromDate, toDate, connection.stmt))
+		Integer periodIDInt = Integer.valueOf(periodID);
+
+		if(avail.RemoveDate(thidInt, periodIDInt, connection.stmt))
 		{
 			%>
-			There was a problem in adding the dates associated with this housing. <BR>
+			Successfully removed dates from Temporary House ID: <%=thidToRemove%>. <BR>
 			<%
 		}
 		else
 		{
 			%>
-			Success in adding the dates for this housing!<BR>
+			Failed to remove dates from temporary house!<BR>
 			<%			
 		}
-		Available available = new Available();
-		if(!available.AddAvailable(costPerNightFloat,connection.stmt, thidInt))
-		{
-			%>
-			There was a problem adding the availability for this housing.<BR>
-			<%
-		}
-		{
-			%>
-			Success in adding the housing dates and availability to the database!<BR>
-			<%
-		}
-		
+				
 		%>
-		Would you like to add more dates? <BR>
-		<button type="button" onclick="location.href= '/~5530u47/AddAvailabilityDates.jsp?thid=<%=thid%>';" id="addMoreButton">Add More</button>  
-		<button type="button" onclick="location.href= '/~5530u47/AddAvailabilityDates.jsp';" id="addMoreButtonButDifferent">Change Temporary House ID</button>  
+		Would you like to remove more dates? <BR>
+		<button type="button" onclick="location.href= '/~5530u47/RemoveAvailabilityDates.jsp?thid=<%=thid%>';" id="removeMoreButton">Remove More</button>  
+		<button type="button" onclick="location.href= '/~5530u47/RemoveAvailabilityDates.jsp';" id="removeMoreButtonButDifferent">Change Temporary House ID</button>  
 		<button type="button" onclick="location.href = '/~5530u47/login_page.jsp?user=<%=login%>&userpassword=<%=password%>';" id="returnButton">Main Menu</button>
 		<%
 	}
