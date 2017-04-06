@@ -105,9 +105,23 @@ else
 		neighbors = true;
 	}
 	
-	
-	Double footageDouble = Double.valueOf(footage);
-	Integer carLimit = Integer.valueOf(car);
+	Double footageDouble;
+	Integer carLimit;
+	if(footage.equals(""))
+	{
+		footageDouble = -1.0;
+	}
+	else{
+		footageDouble = Double.valueOf(footage);
+	}
+	if(car.equals(""))
+	{
+		carLimit = -1;
+	}
+	else{
+		carLimit = Integer.valueOf(car);
+	}
+	 
 	PropertyListing listing = new PropertyListing(login,category,description,
 						footageDouble,carLimit,neighbors, city, state);
 	
