@@ -1381,6 +1381,17 @@ public class Main {
 	
 	public static void GetStatistics(BufferedReader input, Connector connection)
 	{
+		/*
+		public static void displayStatsMenu()
+		{
+		System.out.println("Which statistic are you interested in?");
+   	 	System.out.println("1. Most Popular Temporary Housing");
+   	 	System.out.println("2. Most Expensive Temporary Housing");
+   	 	System.out.println("3. Highest Rated Temporary Housing");
+   	 	System.out.println("4. Exit");
+		System.out.println("To pick your option type in the number associated with that option.");
+		System.out.print("Enter the number here: ");
+		}*/
 		try
 		{
 			String statChoice = "";

@@ -36,6 +36,12 @@
 	boolean isAdminUser = adminStatus.checkIfAdmin(username, connection.stmt);
 	session.setAttribute("theAdminStatus", isAdminUser);
 	
+	session.setAttribute("stayPeriodIDs", null);
+	session.setAttribute("stayThids", null);
+	session.setAttribute("stayCosts", null);
+	session.setAttribute("periodsID", null);
+	session.setAttribute("housesID", null);
+	
 	if(log.LoginToServer(username, password, connection.stmt))
 	{
 	%>
@@ -84,7 +90,7 @@
 	
 	function StayRecord()
 	{
-		
+		window.location.href = "/~5530u47/RecordStay.jsp";
 	}
 	
 	function FeedbackJunk()
@@ -99,7 +105,7 @@
 	
 	function TheStatistics()
 	{
-		window.location.href = "/~/5530u47/Statistics.jsp";
+		window.location.href = "/~5530u47/Statistics.jsp";
 	}
 	
 	function ExitTheProgram()
