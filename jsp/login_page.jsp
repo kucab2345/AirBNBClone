@@ -52,7 +52,7 @@
 	<button class= "loginButtons", onclick="AddDates()">3. Add More Availability Dates to Owned Property</button><BR>
 	<button class= "loginButtons", onclick="StayRecord()">4. Record a Stay</button><BR>
 	<button class= "loginButtons", onclick="FeedbackJunk()">5. Leave Feedback, Feedback Ratings, and User Trust Rating</button><BR>
-	<button class= "loginButtons", onclick="TheBrowsing()">6. Browse Property</button><BR>
+	<button class= "loginButtons", onclick="TheBrowsing()">6. Browse Available Properties</button><BR>
 	<button class= "loginButtons", onclick="TheStatistics()">7. Statistics</button><BR>
 	<button class= "loginButtons", onclick="ExitTheProgram()">8. Exit</button><BR>
 	Click on any button to go to the specified action...<BR>

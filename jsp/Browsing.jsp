@@ -42,6 +42,7 @@ if(houseSearch == null || houseOrder == null)
 {
 %>
 <h2>Temporary Housing Browsing!</h2>
+<h3> Of Available Properties</h3>
 <form name="houseBrowsingForm" method=get onsubmit="return check_all_fieldsBrowse(this)" action="Browsing.jsp">
 Select terms to return from search:<BR>
 	<select id="houseSearchType" name="houseSearchType">
@@ -71,7 +72,7 @@ else
 	String stateCheck = request.getParameter("stateCheck");
 	String keywordsCheck = request.getParameter("keywordsCheck");
 	String categoryCheck = request.getParameter("categoryCheck");
-	if((priceCheck != null || cityCheck != null || stateCheck != null || keywordsCheck != null || categoryCheck != null) && houseSearch.equals("combination"))
+	if((priceCheck == null || cityCheck == null || stateCheck == null || keywordsCheck == null || categoryCheck == null) && houseSearch.equals("combination"))
 	{
 		%>
 		Pick which items you would like to include in your search:<BR>
