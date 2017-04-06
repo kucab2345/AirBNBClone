@@ -50,13 +50,40 @@ else
 {
 	stayCosts = new Float[0];
 }
+boolean success = true;
 for(int i = 0; i < stayPeriodIDs.length; i++)
 {
-	reservations.RemoveReservation(login, stayThids.get(i), stayPeriodIDs.get(i), connection.stmt);
-	String combinedThidAndPeriodID = stayThids.get(i) + " " + stayPeriodIDs.get(i);
-	Stays newStay = new Stays(combinedThidAndPeriodID);
-	newStay.AddStay(login, stayCosts.get(i), connection.stmt); 
+	try
+	{
+		reservations.RemoveReservation(login, stayThids[i], stayPeriodIDs[i], connection.stmt);
+		String combinedThidAndPeriodID = stayThids[i] + " " + stayPeriodIDs[i];
+		Stays newStay = new Stays(combinedThidAndPeriodID);
+		newStay.AddStay(login, stayCosts[i], connection.stmt); 
+
+	}
+	catch(Exception e)
+	{
+			success = false;
+	}
 }
+if(success)
+{
+	stayPeriodIDs = null;
+	stayThids = null;
+	stayCosts = null;
+		
+	session.setAttribute("stayPeriodIDs", stayPeriodIDs);
+	session.setAttribute("stayThids", stayThids);
+	session.setAttribute("stayCosts", stayCosts);
+	out.println("Successfully recorded all stays!");%><BR><%
+}
+else
+{
+	out.println("Failed to record all stays!");%><BR><%
+}
+
 %>
+	Return to the Action Center
+	<button type="button" onclick="location.href = '/~5530u47/login_page.jsp?user=<%=login%>&userpassword=<%=password%>';" id="returnButton">Return</button>
 </body>
 </html>

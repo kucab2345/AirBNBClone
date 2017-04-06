@@ -65,7 +65,6 @@ else
 HashSet<String> validReserves = reservations.DisplayAllReservationsForUser(login, connection.stmt, output);
 out.println(output);
 
-
 %>
 <BR> Enter the temporary housing ID (THID), period ID, and cost for a particular reservation to confirm you've stayed there. <BR>
 <BR>THID<BR>
@@ -86,7 +85,7 @@ out.println(output);
 
 	Click submit to add the reservation. <BR>
 	<input type=submit><BR>
-	To submit these stays, click finish. <BR>
+	To submit these stays, click finish. Be sure to finish adding ALL visits before clicking "Finish". <BR>
 	<button type="button" onclick="location.href = '/~5530u47/RecordStaysFinalize.jsp';" id="finishButton">Finish</button>
 <%
 if(request.getParameter("thidAttribute") != null && request.getParameter("periodIDAttribute") != null && request.getParameter("costAttribute") != null)

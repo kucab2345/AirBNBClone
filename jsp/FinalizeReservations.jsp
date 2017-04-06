@@ -51,7 +51,7 @@ String wantedToReserve = request.getParameter("wantedToReserve");
 if(wantedToReserve == null)
 {
 %>
-<ol> <% for(int i = 0; i < housesID.length; i++) { %>
+<ol> <% for(int i = 0; i < periodsID.length; i++) { %>
  <li>Temporary house of ID: <%=reservation.GetHouseInformation(housesID[i], connection.stmt)%> <BR>
  Staying between the dates of <%=reservation.GetDates(periodsID[i], connection.stmt)%>
  </li>
@@ -68,14 +68,19 @@ else
 {
 	String wantedToReserveValue = request.getParameter("wantedToReserveValue");
 	wantedToReserveValue = wantedToReserveValue.toLowerCase();
-	StringBuilder res = new StringBuilder();
+	StringBuilder res;
 	if(wantedToReserveValue.equals("yes"))
 	{
 		for(int j = 0; j < housesID.length; j++)
 		{
+			res = new StringBuilder();
 			reservation.AddReservation(housesID[j], periodsID[j], connection.stmt, res);
 			out.println(res.toString());
 		}
+		periodsID = null;
+		housesID = null;
+		session.setAttribute("periodsID", periodsID);
+		session.setAttribute("housesID", housesID);
 		%>
 		Successfully added reservations.  Please return to login.<BR>
 		<%
