@@ -84,7 +84,7 @@
 	
 	function StayRecord()
 	{
-		
+		window.location.href = "/~5530u47/RecordStay.jsp";
 	}
 	
 	function FeedbackJunk()
@@ -99,7 +99,7 @@
 	
 	function TheStatistics()
 	{
-		window.location.href = "/~/5530u47/Statistics.jsp";
+		window.location.href = "/~5530u47/Statistics.jsp";
 	}
 	
 	function ExitTheProgram()

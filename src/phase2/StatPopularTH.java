@@ -10,11 +10,12 @@ public class StatPopularTH
 	private String sqlStatement;
 	private ResultSet result;
 
-	public boolean displayMostPopularTH(int limit, Statement stmt)
+	public boolean displayMostPopularTH(String limitS, Statement stmt, StringBuilder sb)
 	{
 		String currentCategory = "";
 		String previousCategory = "";
 		int categoryCount = 0;
+		int limit = Integer.parseInt(limitS);
 		
 		sqlStatement = "Select t.thid, t.category, Count(v.thid) as TotalVisits from temphousing t, visit v where (t.thid = v.thid and t.category = ANY(select category from temphousing)) group by t.thid order by t.category, Count(v.thid) DESC";
 		try 
@@ -36,6 +37,12 @@ public class StatPopularTH
 							System.out.println(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " ");
 							System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 							System.out.println(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " ");
+							
+							sb.append(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " \n");
+							sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
+							sb.append(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " \n");
+							sb.append("=========================================================\n");
+							
 							categoryCount++;
 						}
 						else if(!previousCategory.equals(currentCategory))
@@ -44,6 +51,11 @@ public class StatPopularTH
 							System.out.println(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " ");
 							System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 							System.out.println(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " ");
+							
+							sb.append(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " \n");
+							sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
+							sb.append(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " \n");
+							sb.append("=========================================================\n");
 							categoryCount++;
 						}
 					}
@@ -57,11 +69,12 @@ public class StatPopularTH
 			return false;
 		}
 	}
-	public boolean displayMostExpensiveTH(int limit, Statement stmt)
+	public boolean displayMostExpensiveTH(String limitS, Statement stmt, StringBuilder sb)
 	{
 		String currentCategory = "";
 		String previousCategory = "";
 		int categoryCount = 0;
+		int limit = Integer.parseInt(limitS);
 		
 		sqlStatement = "Select t.thid, t.category, AVG(v.cost) as AverageCost from temphousing t, visit v where (t.thid = v.thid and t.category = ANY(select category from temphousing)) group by t.thid order by t.category, AVG(v.cost) DESC";
 		try 
@@ -83,6 +96,11 @@ public class StatPopularTH
 							System.out.println(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " ");
 							System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 							System.out.println(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " ");
+							
+							sb.append(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " \n");
+							sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
+							sb.append(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " \n");
+							sb.append("=========================================================\n");
 							categoryCount++;
 						}
 						else if(!previousCategory.equals(currentCategory))
@@ -91,6 +109,11 @@ public class StatPopularTH
 							System.out.println(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " ");
 							System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 							System.out.println(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " ");
+							
+							sb.append(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " \n");
+							sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
+							sb.append(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " \n");
+							sb.append("=========================================================\n");
 							categoryCount++;
 						}
 					}
@@ -105,11 +128,12 @@ public class StatPopularTH
 		}
 	}
 	
-	public boolean displayHighestRatedTH(int limit, Statement stmt)
+	public boolean displayHighestRatedTH(String limitS, Statement stmt, StringBuilder sb)
 	{
 		String currentCategory = "";
 		String previousCategory = "";
 		int categoryCount = 0;
+		int limit = Integer.parseInt(limitS);
 		
 		sqlStatement = "Select f.thid, t.category, AVG(f.starRating) as AverageRating from feedback f, temphousing t where (f.thid = t.thid and t.category = ANY(select category from temphousing)) group by f.thid order by t.category, AVG(f.starRating) DESC;";
 		try 
@@ -131,6 +155,11 @@ public class StatPopularTH
 							System.out.println(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " ");
 							System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 							System.out.println(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " ");
+							
+							sb.append(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " \n");
+							sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
+							sb.append(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " \n");
+							sb.append("=========================================================\n");
 							categoryCount++;
 						}
 						else if(!previousCategory.equals(currentCategory))
@@ -139,6 +168,11 @@ public class StatPopularTH
 							System.out.println(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " ");
 							System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
 							System.out.println(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " ");
+							
+							sb.append(result.getMetaData().getColumnName(i-1) + ": " + result.getString(i-1) + " \n");
+							sb.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " \n");
+							sb.append(result.getMetaData().getColumnName(i+1) + ": " + result.getString(i+1) + " \n");
+							sb.append("=========================================================\n");
 							categoryCount++;
 						}
 					}
