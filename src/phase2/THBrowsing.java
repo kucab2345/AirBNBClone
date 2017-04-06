@@ -16,18 +16,59 @@ public class THBrowsing
 		login = desiredLogin;
 	}
 	
-	public HashSet<String> RequestHousingInformation(String price, String city, String state, String keywords, String category, String orderOption, Statement statement, StringBuilder newOutput)
+	public boolean RequestHousingInformation(String price, String city, String state, String keywords, String category, String orderOption, Statement statement, StringBuilder newOutput, String conjunction)
 	{
+		int lastPos = 0;
+		boolean first = true;
+		String[] strings = new String[5];
+		
+		strings[0] = price;
+		strings[1] = city;
+		strings[2] = state;
+		strings[3] = keywords;
+		strings[4] = category;
+		
 		output = new HashSet<String>();
-		sqlStatement = "SELECT t.thid" + price + city + state + keywords + category + " FROM temphousing t, available a";
-		if(!keywords.equals(""))
+		sqlStatement = "SELECT t.*, a.pricePerNight, w.words from temphousing t, available a, keywords w "
+				+ "WHERE a.thid = t.thid AND w.wordsID = ANY(SELECT wordsID FROM haskeywords WHERE thid = t.thid) "
+				+ "AND (";
+		
+		
+			if(!price.equals(""))
+			{
+				sqlStatement += price;
+				lastPos = 0;
+			}
+			else if(!city.equals(""))
+			{
+				sqlStatement += city;
+				lastPos = 1;
+			}
+			else if(!state.equals(""))
+			{
+				sqlStatement += state;
+				lastPos = 2;
+			}
+			else if(!keywords.equals(""))
+			{
+				sqlStatement += keywords;
+				lastPos = 3;
+			}
+			else if(!category.equals(""))
+			{
+				sqlStatement += category;
+				lastPos = 4;
+			}
+			
+		for(int i = lastPos + 1; i < strings.length; i++)
 		{
-			sqlStatement += ", keywords w WHERE a.thid = t.thid AND w.wordsID = ANY(SELECT wordsID FROM haskeywords WHERE thid = t.thid)";
+			if(!strings[i].equals(""))
+			{
+				sqlStatement += conjunction + strings[i];
+			}
 		}
-		else
-		{
-			sqlStatement += " WHERE a.thid = t.thid";
-		}
+		sqlStatement += ") group by t.thid, a.pricePerNight, w.words ";
+		
 		
 		sqlStatement += " ORDER BY " + orderOption;
 		if(!orderOption.equals("a.pricePerNight"))
@@ -53,13 +94,13 @@ public class THBrowsing
 				//System.out.println("===============================================================================================");
 				newOutput.append("===============================================================================================<br/>");
 			}
-			return output;
+			return true;
 		}
 		catch(Exception e)
 		{
 			System.err.println(e.getMessage() + "\n" +  e.getStackTrace());
 			System.out.println("Cannot find the housing information requested.");
-			return output;
+			return false;
 		}
 	}
 	
