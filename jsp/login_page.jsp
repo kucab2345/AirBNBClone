@@ -94,7 +94,7 @@
 	
 	function TheBrowsing()
 	{
-		
+		window.location.href = "/~5530u47/Browsing.jsp";
 	}
 	
 	function TheStatistics()
