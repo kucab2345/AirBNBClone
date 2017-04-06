@@ -16,7 +16,7 @@ public class THBrowsing
 		login = desiredLogin;
 	}
 	
-	public HashSet<String> RequestHousingInformation(String price, String city, String state, String keywords, String category, String orderOption, Statement statement)
+	public HashSet<String> RequestHousingInformation(String price, String city, String state, String keywords, String category, String orderOption, Statement statement, StringBuilder newOutput)
 	{
 		output = new HashSet<String>();
 		sqlStatement = "SELECT t.thid" + price + city + state + keywords + category + " FROM temphousing t, available a";
@@ -41,16 +41,17 @@ public class THBrowsing
 		try
 		{
 			result = statement.executeQuery(sqlStatement);
-			System.out.println("===============================================================================================");
-
+			//System.out.println("===============================================================================================");
+			newOutput.append("===============================================================================================<br/>");
 			while(result.next())
 			{
 				for(int i = 1; i <= result.getMetaData().getColumnCount(); i++)
 				{
-					System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+					//System.out.println(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " ");
+					newOutput.append(result.getMetaData().getColumnName(i) + ": " + result.getString(i) + " <br/>");
 				}
-				System.out.println("===============================================================================================");
-
+				//System.out.println("===============================================================================================");
+				newOutput.append("===============================================================================================<br/>");
 			}
 			return output;
 		}

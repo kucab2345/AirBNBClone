@@ -79,7 +79,7 @@
 	
 	function AddDates()
 	{
-		
+		window.location.href = "/~5530u47/AvailabilityMenu.jsp";
 	}
 	
 	function StayRecord()
@@ -94,7 +94,7 @@
 	
 	function TheBrowsing()
 	{
-		
+		window.location.href = "/~5530u47/Browsing.jsp";
 	}
 	
 	function TheStatistics()
