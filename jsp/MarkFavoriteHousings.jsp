@@ -33,10 +33,9 @@ for(int i = 0; i < lines.length; i++)
 %>
 <BR><BR>
 <%
-out.println("Enter the THID you wish to favorite");
-
 if(request.getParameter("favoriteTHIDAttribute") == null)
 {
+	out.println("Enter the THID you wish to favorite");
 %>
 <form name="favoriteTHID" method=get onsubmit="return check_all_fields(this)">
 		<input type=hidden name="favoriteTHIDAttribute" value="THID">
@@ -55,8 +54,12 @@ else
 	}
 	else
 	{
-		%><BR><BR><%
+		%><BR>
+		<BR><%
 		out.println("Successful!");
+		%>
+		<button type="button" onclick="location.href = '/~5530u47/FeedbackMenu.jsp';" id="returnButton">Return</button>
+		<%
 	}
 }
 connection.closeStatement();
