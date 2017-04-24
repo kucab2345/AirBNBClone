@@ -37,6 +37,9 @@ THID to view feedbacks of<BR>
 		<input type=text name="THIDValue" length=30>
 <BR>
 <input type=submit>
+
+<BR>
+	<button type="button" onclick="location.href = '/~5530u47/FeedbackMenu.jsp';" id="returnButton">Return</button>
 <%
 }
 if(request.getParameter("THIDAttribute") != null)
